@@ -279,7 +279,7 @@ export default function AdminUsersPage() {
   };
 
   const handleDeleteUser = async (userObj: any) => {
-    if (userObj.role?.name === 'admin' || userObj.email === 'admin@blueboxx.com') {
+    if (userObj.role?.name === 'admin' || userObj.email === 'admin@xeoexperts.com') {
       setToastMessage('The Primary Admin account is permanent and cannot be removed.');
       return;
     }
@@ -361,7 +361,7 @@ export default function AdminUsersPage() {
           <TablePrimitive
             headers={['User', 'Email', 'Role', 'Department', 'Shift / Timings', 'Manager', 'Status', 'Action']}
             rows={users.map((u) => {
-              const isAdmin = u.role?.name === 'admin' || u.email === 'admin@blueboxx.com';
+              const isAdmin = u.role?.name === 'admin' || u.email === 'admin@xeoexperts.com';
               const uShift = u.shift || shiftsList.find((s) => s.id === u.shift_id);
               const shiftTimeLabel = uShift?.start_time && uShift?.end_time
                 ? `${uShift.start_time.slice(0, 5)} - ${uShift.end_time.slice(0, 5)}`
