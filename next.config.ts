@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     const rawApi = (process.env.NEXT_PUBLIC_API_URL || '').trim();
     const backendUrl = rawApi
       ? rawApi.replace(/\/api\/?$/, '')
-      : (process.env.NODE_ENV === 'production' ? 'https://hrms-backend.blueboxx.in' : 'http://127.0.0.1:8000');
+      : 'https://xeob.blueboxxda.com';
 
     return [
       {

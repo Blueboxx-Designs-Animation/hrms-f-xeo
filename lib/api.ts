@@ -1,6 +1,6 @@
 function normalizeApiBase(base: string): string {
   let cleaned = (base || '').trim().replace(/\/+$/, '');
-  if (!cleaned) return 'http://127.0.0.1:8000/api';
+  if (!cleaned) return 'https://xeob.blueboxxda.com/api';
   if (!cleaned.endsWith('/api')) {
     cleaned += '/api';
   }
@@ -17,7 +17,7 @@ export function getPrimaryApiBase(): string {
     return `${window.location.origin}/api`;
   }
 
-  return 'http://127.0.0.1:8000/api';
+  return 'https://xeob.blueboxxda.com/api';
 }
 
 function buildApiUrl(base: string, endpoint: string): string {
@@ -61,7 +61,7 @@ export async function fetchApi(endpoint: string, options: RequestInit = {}) {
     // Fallback: try relative or alternate if primary threw a network error
     const fallbackBase = typeof window !== 'undefined' && window.location.origin
       ? `${window.location.origin}/api`
-      : 'http://127.0.0.1:8000/api';
+      : 'https://xeob.blueboxxda.com/api';
 
     if (fallbackBase !== primaryBase) {
       const fallbackUrl = buildApiUrl(fallbackBase, endpoint);
@@ -111,7 +111,7 @@ export async function downloadApiFile(endpoint: string, fallbackFilename = 'docu
   } catch (err) {
     const fallbackBase = typeof window !== 'undefined' && window.location.origin
       ? `${window.location.origin}/api`
-      : 'http://127.0.0.1:8000/api';
+      : 'https://xeob.blueboxxda.com/api';
 
     if (fallbackBase !== primaryBase) {
       const fallbackUrl = buildApiUrl(fallbackBase, endpoint);
@@ -156,7 +156,7 @@ export async function fetchApiBlobUrl(endpoint: string): Promise<{ url: string; 
   } catch (err) {
     const fallbackBase = typeof window !== 'undefined' && window.location.origin
       ? `${window.location.origin}/api`
-      : 'http://127.0.0.1:8000/api';
+      : 'https://xeob.blueboxxda.com/api';
 
     if (fallbackBase !== primaryBase) {
       const fallbackUrl = buildApiUrl(fallbackBase, endpoint);
