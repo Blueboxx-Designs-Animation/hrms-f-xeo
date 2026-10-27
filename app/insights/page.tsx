@@ -17,7 +17,7 @@ export default function InsightsPage() {
         if (role === 'admin') {
           router.replace('/admin/dashboard');
         } else if (role === 'hr') {
-          router.replace('/hr/dashboard');
+          router.replace('/admin/dashboard');
         } else {
           router.replace('/employee/dashboard');
         }

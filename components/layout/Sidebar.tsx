@@ -43,15 +43,29 @@ export function Sidebar() {
     closeMobileMenu();
   }, [pathname]);
 
-  // Determine current active namespace from URL pathname
+  // Determine user's primary role for sidebar menu items
+  const userRole = (typeof user?.role === 'object' ? (user.role as any)?.name : user?.role || 'employee').toString().toLowerCase();
+
+  // If user is Admin, they should always see Admin sidebar menu across all pages
   let activeNamespace: 'admin' | 'hr' | 'manager' | 'team_leader' | 'employee' = 'employee';
-  if (pathname.startsWith('/admin')) activeNamespace = 'admin';
-  else if (pathname.startsWith('/hr')) activeNamespace = 'hr';
-  else if (pathname.startsWith('/manager')) activeNamespace = 'manager';
-  else if (pathname.startsWith('/team-leader')) activeNamespace = 'team_leader';
-  else if (pathname.startsWith('/employee')) activeNamespace = 'employee';
-  else {
-    activeNamespace = (role as any) || 'employee';
+  if (userRole === 'admin') {
+    activeNamespace = 'admin';
+  } else if (userRole === 'hr') {
+    activeNamespace = 'hr';
+  } else if (userRole === 'manager' || userRole === 'company_manager') {
+    activeNamespace = 'manager';
+  } else if (userRole === 'team_leader' || userRole === 'tl' || userRole === 'team_lead') {
+    activeNamespace = 'team_leader';
+  } else if (pathname.startsWith('/admin')) {
+    activeNamespace = 'admin';
+  } else if (pathname.startsWith('/hr')) {
+    activeNamespace = 'hr';
+  } else if (pathname.startsWith('/manager')) {
+    activeNamespace = 'manager';
+  } else if (pathname.startsWith('/team-leader')) {
+    activeNamespace = 'team_leader';
+  } else {
+    activeNamespace = 'employee';
   }
 
   const portalTitleMap = {
@@ -90,7 +104,7 @@ export function Sidebar() {
       { label: 'My Profile', href: '/profile', icon: User },
     ],
     hr: [
-      { label: 'Dashboard', href: '/hr/dashboard', icon: LayoutDashboard },
+      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
       { label: 'HR Assistant', href: '/hr/assistant', icon: Sparkles },
       { label: 'Notifications', href: '/notifications', icon: Megaphone },
       { label: 'Employees', href: '/hr/employees', icon: Users },

@@ -148,14 +148,24 @@ export function Topbar() {
     }
   };
 
-  // Determine current active namespace from URL pathname
+  // Determine active namespace based on logged in user role first
+  const userRole = (typeof user?.role === 'object' ? (user.role as any)?.name : user?.role || 'employee').toString().toLowerCase();
+
   let activeNamespace: 'admin' | 'hr' | 'manager' | 'employee' = 'employee';
-  if (pathname.startsWith('/admin')) activeNamespace = 'admin';
-  else if (pathname.startsWith('/hr')) activeNamespace = 'hr';
-  else if (pathname.startsWith('/manager')) activeNamespace = 'manager';
-  else if (pathname.startsWith('/employee')) activeNamespace = 'employee';
-  else {
-    activeNamespace = (user?.role as any) || 'employee';
+  if (userRole === 'admin') {
+    activeNamespace = 'admin';
+  } else if (userRole === 'hr') {
+    activeNamespace = 'hr';
+  } else if (userRole === 'manager' || userRole === 'company_manager') {
+    activeNamespace = 'manager';
+  } else if (pathname.startsWith('/admin')) {
+    activeNamespace = 'admin';
+  } else if (pathname.startsWith('/hr')) {
+    activeNamespace = 'hr';
+  } else if (pathname.startsWith('/manager')) {
+    activeNamespace = 'manager';
+  } else {
+    activeNamespace = 'employee';
   }
 
   const handleLogout = async () => {
@@ -167,20 +177,9 @@ export function Topbar() {
     setCheckingIn(true);
     try {
       const clientTime = new Date().toTimeString().split(' ')[0]; // HH:MM:SS
-      const coords = await getCurrentLocation().catch((err: any) => {
-        console.warn('Geolocation notice:', err.message);
-        return null;
-      });
-
-      const payload: any = { time: clientTime };
-      if (coords?.latitude !== undefined && coords?.longitude !== undefined) {
-        payload.latitude = coords.latitude;
-        payload.longitude = coords.longitude;
-      }
-
       const res = await fetchApi('/attendance/check-in', {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ time: clientTime }),
       });
       const timeFormatted = formatTimeDisplay(res.attendance?.check_in) || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       setToastMessage(res.message || `Checked in successfully at ${timeFormatted}`);
@@ -291,73 +290,45 @@ export function Topbar() {
           </div>
         ) : (
           <div className="flex items-center gap-1 sm:gap-2">
-            {(() => {
-              const shiftEndTime = user?.shift?.end_time || '18:00:00';
-              const isSaturday = new Date().getDay() === 6;
-              const effectiveCutoffTime = isSaturday ? '14:00:00' : shiftEndTime;
-              const cutoffHour = parseInt(effectiveCutoffTime.split(':')[0], 10);
-              const cutoffMin = parseInt(effectiveCutoffTime.split(':')[1] || '0', 10);
-              const now = new Date();
-              const isPastAutoCheckout = now.getHours() > cutoffHour || (now.getHours() === cutoffHour && now.getMinutes() >= cutoffMin);
+            {/* Check In Status / Button */}
+            {hasCheckedIn ? (
+              <div className="px-1.5 sm:px-3 py-0.5 sm:py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold rounded-lg flex items-center gap-1 text-[10px] sm:text-xs select-none">
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 shrink-0" />
+                <span className="whitespace-nowrap">In: {formatTimeDisplay(todayAttendance.check_in)}</span>
+              </div>
+            ) : (
+              <button
+                onClick={handleCheckIn}
+                disabled={checkingIn}
+                className="px-2 sm:px-3.5 py-1 sm:py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold rounded-lg shadow-2xs transition-all cursor-pointer text-[11px] sm:text-xs disabled:opacity-50 flex items-center gap-1"
+                title="Record your daily check-in time"
+              >
+                <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                <span className="whitespace-nowrap">{checkingIn ? 'Recording...' : 'Check In'}</span>
+              </button>
+            )}
 
-              return (
-                <>
-                  {/* Check In Status / Button */}
-                  {hasCheckedIn ? (
-                    <div className="px-1.5 sm:px-3 py-0.5 sm:py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold rounded-lg flex items-center gap-1 text-[10px] sm:text-xs select-none">
-                      <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 shrink-0" />
-                      <span className="whitespace-nowrap">In: {formatTimeDisplay(todayAttendance.check_in)}</span>
-                    </div>
-                  ) : isPastAutoCheckout ? (
-                    <div className="px-1.5 sm:px-3 py-0.5 sm:py-1 bg-slate-100 border border-slate-200 text-slate-400 font-bold rounded-lg flex items-center gap-1 text-[10px] sm:text-xs select-none cursor-not-allowed" title="Shift ended. Check-in closed for today.">
-                      <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
-                      <span className="whitespace-nowrap">Ended</span>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleCheckIn}
-                      disabled={checkingIn}
-                      className="px-2 sm:px-3.5 py-1 sm:py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold rounded-lg shadow-2xs transition-all cursor-pointer text-[11px] sm:text-xs disabled:opacity-50 flex items-center gap-1"
-                      title="Record your daily check-in time"
-                    >
-                      <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-                      <span className="whitespace-nowrap">{checkingIn ? 'Recording...' : 'Check In'}</span>
-                    </button>
-                  )}
-
-                  {/* Check Out Status / Button */}
-                  {hasCheckedOut ? (
-                    <div className="px-1.5 sm:px-3 py-0.5 sm:py-1 bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-lg flex items-center gap-1 text-[10px] sm:text-xs select-none cursor-default" title={todayAttendance.notes || 'Attendance checked out'}>
-                      <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500 shrink-0" />
-                      <span className="whitespace-nowrap">Out: {formatTimeDisplay(todayAttendance.check_out)}</span>
-                      {todayAttendance.notes?.includes('Auto check-out') && (
-                        <span className="text-[9px] text-indigo-600 bg-indigo-50 px-1 rounded font-semibold ml-0.5 hidden sm:inline">Auto</span>
-                      )}
-                    </div>
-                  ) : hasCheckedIn && isPastAutoCheckout ? (
-                    <div className="px-1.5 sm:px-3 py-0.5 sm:py-1 bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-lg flex items-center gap-1 text-[10px] sm:text-xs select-none cursor-default" title="Shift ended. Auto check-out triggered.">
-                      <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500 shrink-0" />
-                      <span className="whitespace-nowrap">Out: {formatTimeDisplay(effectiveCutoffTime)}</span>
-                      <span className="text-[9px] text-indigo-600 bg-indigo-50 px-1 rounded font-semibold ml-0.5 hidden sm:inline">Auto</span>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleCheckOut}
-                      disabled={checkingOut || !hasCheckedIn}
-                      className={`px-2 sm:px-3.5 py-1 sm:py-1.5 font-bold rounded-lg shadow-2xs transition-all text-[11px] sm:text-xs flex items-center gap-1 ${
-                        hasCheckedIn
-                          ? 'bg-rose-600 hover:bg-rose-700 active:scale-95 text-white cursor-pointer'
-                          : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                      }`}
-                      title={!hasCheckedIn ? 'Must check in first before checking out' : 'Record your daily check-out time'}
-                    >
-                      <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-                      <span className="whitespace-nowrap">{checkingOut ? 'Recording...' : 'Check Out'}</span>
-                    </button>
-                  )}
-                </>
-              );
-            })()}
+            {/* Check Out Status / Button */}
+            {hasCheckedOut ? (
+              <div className="px-1.5 sm:px-3 py-0.5 sm:py-1 bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-lg flex items-center gap-1 text-[10px] sm:text-xs select-none cursor-default" title={todayAttendance.notes || 'Attendance checked out'}>
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-500 shrink-0" />
+                <span className="whitespace-nowrap">Out: {formatTimeDisplay(todayAttendance.check_out)}</span>
+              </div>
+            ) : (
+              <button
+                onClick={handleCheckOut}
+                disabled={checkingOut || !hasCheckedIn}
+                className={`px-2 sm:px-3.5 py-1 sm:py-1.5 font-bold rounded-lg shadow-2xs transition-all text-[11px] sm:text-xs flex items-center gap-1 ${
+                  hasCheckedIn
+                    ? 'bg-rose-600 hover:bg-rose-700 active:scale-95 text-white cursor-pointer'
+                    : 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                }`}
+                title={!hasCheckedIn ? 'Must check in first before checking out' : 'Record your daily check-out time'}
+              >
+                <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                <span className="whitespace-nowrap">{checkingOut ? 'Recording...' : 'Check Out'}</span>
+              </button>
+            )}
           </div>
         )}
 

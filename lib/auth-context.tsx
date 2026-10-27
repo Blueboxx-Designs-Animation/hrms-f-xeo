@@ -10,7 +10,7 @@ export function getRoleDefaultRoute(role?: string): string {
     case 'admin':
       return '/admin/dashboard';
     case 'hr':
-      return '/hr/dashboard';
+      return '/admin/dashboard';
     case 'manager':
     case 'company_manager':
       return '/manager/dashboard';

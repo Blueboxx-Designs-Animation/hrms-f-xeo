@@ -43,18 +43,9 @@ export default function EmployeeDashboardPage() {
   const handleCheckIn = async () => {
     setCheckingIn(true);
     try {
-      const coords = await getCurrentLocation().catch((err: any) => {
-        console.warn('Geolocation notice:', err.message);
-        return null;
-      });
-      const payload: any = {};
-      if (coords?.latitude !== undefined && coords?.longitude !== undefined) {
-        payload.latitude = coords.latitude;
-        payload.longitude = coords.longitude;
-      }
       const res = await fetchApi('/attendance/check-in', {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: JSON.stringify({}),
       });
       setToastMessage(res.message || 'Checked in successfully!');
       await loadData();

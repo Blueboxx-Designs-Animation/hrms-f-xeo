@@ -118,20 +118,9 @@ export default function EmployeeAttendancePage() {
     setCheckingIn(true);
     try {
       const clientTime = new Date().toTimeString().split(' ')[0]; // HH:MM:SS
-      const coords = await getCurrentLocation().catch((err: any) => {
-        console.warn('Geolocation notice:', err.message);
-        return null;
-      });
-
-      const payload: any = { time: clientTime };
-      if (coords?.latitude !== undefined && coords?.longitude !== undefined) {
-        payload.latitude = coords.latitude;
-        payload.longitude = coords.longitude;
-      }
-
       const res = await fetchApi('/attendance/check-in', {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ time: clientTime }),
       });
       setToastMessage(res.message || 'Checked in successfully!');
       await loadData();
@@ -199,21 +188,6 @@ export default function EmployeeAttendancePage() {
   const hasCheckedIn = !!todayAttendance?.check_in;
   const hasCheckedOut = !!todayAttendance?.check_out;
 
-  const isPastAutoCheckout = () => {
-    if (!schedule?.today_auto_checkout_time) {
-      return new Date().getDay() === 6 ? new Date().getHours() >= 14 : new Date().getHours() >= 18;
-    }
-    const parts = schedule.today_auto_checkout_time.split(':');
-    const cutoffHour = parseInt(parts[0], 10);
-    const cutoffMin = parseInt(parts[1] || '0', 10);
-    const now = new Date();
-    return now.getHours() > cutoffHour || (now.getHours() === cutoffHour && now.getMinutes() >= cutoffMin);
-  };
-
-  const autoCheckoutDisplayTime = formatTime(
-    schedule?.today_auto_checkout_time || (new Date().getDay() === 6 ? '14:00:00' : '18:00:00')
-  );
-
   return (
     <PortalLayout namespace="employee">
       <PageHeader
@@ -225,11 +199,6 @@ export default function EmployeeAttendancePage() {
               <div className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold rounded-xl flex items-center gap-1.5 text-xs select-none">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>In: {formatTime(todayAttendance.check_in)}</span>
-              </div>
-            ) : isPastAutoCheckout() ? (
-              <div className="px-3 py-1.5 bg-slate-100 border border-slate-200 text-slate-400 font-bold rounded-xl flex items-center gap-1.5 text-xs select-none cursor-not-allowed" title="Shift ended. Check-in closed for today.">
-                <Clock className="w-4 h-4 text-slate-400" />
-                <span>Shift Ended</span>
               </div>
             ) : (
               <button
@@ -250,12 +219,6 @@ export default function EmployeeAttendancePage() {
                   <span className="text-[10px] text-indigo-600 bg-indigo-50 px-1 rounded font-semibold ml-0.5">Auto</span>
                 )}
               </div>
-            ) : hasCheckedIn && isPastAutoCheckout() ? (
-              <div className="px-3 py-1.5 bg-slate-100 border border-slate-300 text-slate-700 font-bold rounded-xl flex items-center gap-1.5 text-xs select-none" title="Shift ended. Auto check-out triggered.">
-                <CheckCircle2 className="w-4 h-4 text-slate-500" />
-                <span>Out: {autoCheckoutDisplayTime}</span>
-                <span className="text-[10px] text-indigo-600 bg-indigo-50 px-1 rounded font-semibold ml-0.5">Auto</span>
-              </div>
             ) : (
               <button
                 onClick={handleCheckOut}
@@ -274,7 +237,7 @@ export default function EmployeeAttendancePage() {
         }
       />
 
-      {/* SHIFT TIMING & AUTO CLOCK-OUT STATUS BANNER */}
+      {/* SHIFT TIMING STATUS BANNER */}
       <div className="bg-gradient-to-r from-[#0f365e]/5 via-indigo-50/40 to-emerald-50/30 border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-[#0f365e] text-white flex items-center justify-center font-bold">
@@ -293,21 +256,6 @@ export default function EmployeeAttendancePage() {
               Working Days: {schedule?.work_days ? schedule.work_days.join(', ') : 'Mon - Sat'} • Grace Period: {schedule?.grace_period_minutes ?? 15} mins
             </p>
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <div className="flex items-center gap-2 bg-white/80 border border-slate-200 px-3 py-2 rounded-lg text-slate-700 font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px]">
-              <strong>Auto Checkout:</strong> Mon–Fri <strong className="text-emerald-700">6:00 PM</strong> • Sat <strong className="text-indigo-700">2:00 PM</strong>
-            </span>
-          </div>
-          {officeLocation && (
-            <div className="flex items-center gap-1.5 bg-indigo-50 border border-indigo-200 px-3 py-2 rounded-lg text-indigo-900 text-[11px] font-semibold">
-              <span>📍</span>
-              <span><strong>Office Geofence:</strong> {officeLocation.name} ({officeLocation.radius_meters || 500}m allowed radius)</span>
-            </div>
-          )}
         </div>
       </div>
 

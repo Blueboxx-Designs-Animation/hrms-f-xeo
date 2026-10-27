@@ -8,7 +8,14 @@ import { fetchApi } from '@/lib/api';
 import { Toast } from '@/components/ui/Toast';
 import { Modal } from '@/components/ui/Modal';
 
+import { useRouter } from 'next/navigation';
+
 export default function HRDashboardPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/admin/dashboard');
+  }, [router]);
   const [attendanceSummary, setAttendanceSummary] = useState<any>(null);
   const [leaveRequests, setLeaveRequests] = useState<any[]>([]);
   const [insights, setInsights] = useState<any>(null);
