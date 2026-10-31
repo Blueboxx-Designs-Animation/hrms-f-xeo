@@ -34,12 +34,12 @@ export function downloadInvoiceAsPDF(invoice: any, company: any) {
   };
 }
 
-export function formatCurrency(amount: number | string | undefined | null, currency = 'INR'): string {
+export function formatCurrency(amount: number | string | undefined | null, currency = 'EUR'): string {
   const num = typeof amount === 'string' ? parseFloat(amount) : (amount || 0);
-  if (isNaN(num)) return '₹0.00';
+  if (isNaN(num)) return '€ 0.00';
   
-  const symbol = currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : '₹';
-  return `${symbol}${num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const symbol = currency === 'USD' ? '$ ' : currency === 'EUR' ? '€ ' : currency === 'GBP' ? '£ ' : currency === 'INR' ? '₹ ' : `${currency} `;
+  return `${symbol}${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function generatePrintableInvoiceHTML(invoice: any, company: any): string {
@@ -47,19 +47,22 @@ export function generatePrintableInvoiceHTML(invoice: any, company: any): string
   const comp = company || {};
   const items = inv.items || [];
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  const logoUrl = comp.logo || '/images/logoblue.png';
-  const fullLogoUrl = logoUrl.startsWith('http') ? logoUrl : `${origin}${logoUrl}`;
+  const logoUrl = comp.logo || '/images/xeoexperts-logo.jpg';
+  const fullLogoUrl = logoUrl.startsWith('http') || logoUrl.startsWith('data:') ? logoUrl : `${origin}${logoUrl}`;
+
+  // Invoice Number formatting
+  const invNum = inv.invoice_number ? String(inv.invoice_number).replace(/^[^\d]*/, '') : '0024';
 
   return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title> </title>
+  <title>Invoice - ${inv.invoice_number || '0024'}</title>
   <style>
     @page {
       size: A4 portrait;
-      margin: 0;
+      margin: 12mm 15mm;
     }
     * {
       box-sizing: border-box;
@@ -72,165 +75,180 @@ export function generatePrintableInvoiceHTML(invoice: any, company: any): string
     }
     html, body {
       background: #ffffff;
-      color: #334155;
+      color: #111827;
       font-size: 13px;
-      line-height: 1.5;
-      margin: 0;
-      padding: 0;
+      line-height: 1.45;
     }
-    .invoice-container {
+    .invoice-wrapper {
       width: 100%;
-      max-width: 100%;
-      padding: 22mm 22mm 18mm 22mm;
+      max-width: 190mm;
       margin: 0 auto;
+      padding: 10px 0;
     }
-    .header-table {
+
+    /* TOP HEADER */
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+    .brand-logo {
+      height: 60px;
+      max-width: 220px;
+      object-fit: contain;
+    }
+    .invoice-meta {
+      text-align: right;
+    }
+    .invoice-meta h1 {
+      font-size: 32px;
+      font-weight: 400;
+      color: #0b1329;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .invoice-meta .meta-date {
+      font-size: 11.5px;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    /* FROM / TO TWO-COLUMN */
+    .party-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+    .party-col {
+      width: 48%;
+    }
+    .party-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0b1329;
+      margin-bottom: 6px;
+    }
+    .party-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .party-text {
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.5;
+    }
+    .party-text a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ITEMS TABLE */
+    table.items-table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
     }
-    .header-divider {
-      border: none;
-      border-top: 1px solid #e2e8f0;
-      margin: 0 0 28px 0;
-      width: 100%;
-    }
-    .header-table td {
-      vertical-align: top;
-    }
-    .company-logo {
-      height: 54px;
-      max-width: 250px;
-      object-fit: contain;
-      display: block;
-    }
-    .invoice-badge {
-      background-color: #269784 !important;
-      color: #ffffff !important;
-      font-weight: 800;
-      font-size: 15px;
-      padding: 6px 18px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      display: inline-block;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-    .bill-date {
-      font-size: 12px;
-      color: #64748b;
-      margin-top: 6px;
-      font-weight: 500;
-    }
-    .two-col {
-      width: 100%;
-      display: table;
-      margin-bottom: 36px;
-    }
-    .col {
-      display: table-cell;
-      width: 50%;
-      vertical-align: top;
-    }
-    .company-title, .bill-to-title {
-      font-weight: 700;
-      font-size: 13px;
-      color: #0f172a;
-      margin-bottom: 3px;
-    }
-    .client-name {
-      font-weight: 600;
-      color: #0f172a;
-      font-size: 13px;
-    }
-    .details-text {
-      color: #475569;
-      font-size: 12px;
-      line-height: 1.55;
-    }
-    table.items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      margin-bottom: 24px;
+    table.items-table thead tr {
+      background-color: #dce0e9 !important;
     }
     table.items-table th {
-      background-color: #269784 !important;
-      color: #ffffff !important;
-      font-size: 12px;
+      padding: 10px 14px;
+      font-size: 12.5px;
       font-weight: 700;
-      padding: 9px 14px;
+      color: #1f2937;
       text-align: left;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
     }
-    table.items-table th.text-center, table.items-table td.text-center {
-      text-align: center;
-    }
-    table.items-table th.text-right, table.items-table td.text-right {
-      text-align: right;
+    table.items-table th.col-qty { text-align: center; width: 10%; }
+    table.items-table th.col-price { text-align: right; width: 14%; }
+    table.items-table th.col-tax { text-align: center; width: 10%; }
+    table.items-table th.col-total { text-align: right; width: 15%; }
+
+    table.items-table tbody tr {
+      border-bottom: 1px solid #e5e7eb;
     }
     table.items-table td {
       padding: 12px 14px;
-      border-bottom: 1px solid #f1f5f9;
       font-size: 12px;
+      vertical-align: middle;
+      color: #1f2937;
     }
-    .item-name {
-      font-weight: 600;
-      color: #0f172a;
+    table.items-table td.col-qty { text-align: center; font-weight: 600; }
+    table.items-table td.col-price { text-align: right; font-weight: 600; }
+    table.items-table td.col-tax { text-align: center; font-weight: 600; }
+    table.items-table td.col-total { text-align: right; font-weight: 700; }
+
+    .item-title {
+      font-weight: 700;
+      color: #0b1329;
+      font-size: 12.5px;
+      margin-bottom: 2px;
     }
     .item-desc {
+      color: #6b7280;
       font-size: 11px;
-      color: #64748b;
-      margin-top: 2px;
+      line-height: 1.4;
     }
-    .totals-container {
-      width: 100%;
-      display: table;
-      margin-top: 10px;
-    }
-    .totals-wrapper {
-      float: right;
-      width: 320px;
-    }
-    .total-row {
+
+    /* SUMMARY BOTTOM */
+    .summary-section {
       display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      font-size: 12px;
-      color: #334155;
+      justify-content: flex-end;
+      margin-top: 15px;
     }
-    .total-label {
-      font-weight: 500;
-      text-align: right;
-      width: 50%;
-      padding-right: 15px;
+    .summary-card {
+      width: 280px;
     }
-    .total-val {
-      text-align: right;
-      width: 50%;
-    }
-    .balance-due-box {
-      background-color: #269784 !important;
-      color: #ffffff !important;
+    .summary-header {
+      background-color: #dce0e9 !important;
       padding: 8px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      color: #1f2937;
+      text-align: right;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      border-radius: 4px 4px 0 0;
+    }
+    .summary-header svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+    .summary-rows {
+      padding: 10px 0;
+    }
+    .summary-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-weight: 800;
-      font-size: 13px;
-      margin-top: 4px;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
+      padding: 4px 14px;
+      font-size: 12.5px;
+      color: #374151;
     }
+    .summary-row.total-row {
+      font-weight: 800;
+      font-size: 13.5px;
+      color: #0b1329;
+      padding-top: 6px;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 4px;
+    }
+
+    .page-num {
+      text-align: right;
+      font-size: 10.5px;
+      color: #6b7280;
+      margin-top: 40px;
+    }
+
     @media print {
-      html, body {
-        background: #ffffff !important;
+      body {
         margin: 0 !important;
         padding: 0 !important;
-      }
-      .invoice-container {
-        padding: 22mm 22mm 18mm 22mm !important;
       }
       .no-print {
         display: none !important;
@@ -239,103 +257,122 @@ export function generatePrintableInvoiceHTML(invoice: any, company: any): string
   </style>
 </head>
 <body>
-  <div class="invoice-container">
-    <table class="header-table">
-      <tr>
-        <td>
-          <img src="${fullLogoUrl}" alt="BLUEBOXX DA" class="company-logo" />
-        </td>
-        <td style="text-align: right;">
-          <div class="invoice-badge">PERFORMA INVOICE</div>
-          <div class="bill-date">Bill date: ${inv.invoice_date ? new Date(inv.invoice_date).toISOString().slice(0, 10) : ''}</div>
-        </td>
-      </tr>
-    </table>
+  <div class="invoice-wrapper">
+    <!-- HEADER -->
+    <div class="header-row">
+      <img src="${fullLogoUrl}" alt="XeoExperts" class="brand-logo" onerror="this.src='/images/xeoexperts-logo.jpg'" />
+      <div class="invoice-meta">
+        <h1>Invoice: ${invNum}</h1>
+        <div class="meta-date">Issued on: ${inv.invoice_date ? new Date(inv.invoice_date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}</div>
+        <div class="meta-date">Due by: ${inv.due_date ? new Date(inv.due_date).toISOString().slice(0, 10) : new Date(Date.now() + 7*86400000).toISOString().slice(0, 10)}</div>
+      </div>
+    </div>
 
-    <hr class="header-divider" />
-
-    <div class="two-col">
-      <div class="col">
-        <div class="company-title">Blueboxx DA</div>
-        <div class="details-text">
-          02, India Bulls Mall, Jetalpur Road, Vadodara<br>
-          Phone: 9023512853<br>
-          Website: http://www.blueboxx.in/
+    <!-- FROM & TO -->
+    <div class="party-grid">
+      <!-- FROM (XeoExperts) -->
+      <div class="party-col">
+        <div class="party-title">From</div>
+        <div class="party-name">${comp.name || 'XeoExperts'}</div>
+        <div class="party-text">
+          ${comp.contact_person || 'Hardik Shah'}<br>
+          ${comp.address || '617 Ganesh Glory Gota'}<br>
+          ${comp.city_postal || '382481 Ahmedabad'}<br>
+          ${comp.country || 'India'}<br>
+          ${comp.email || 'hardik.shah@xeoexperts.com'}<br>
+          ${comp.phone || '+919904839139'}<br>
+          <a href="${comp.website || 'https://www.xeoexperts.com/'}">${comp.website || 'https://www.xeoexperts.com/'}</a>
         </div>
       </div>
 
-      <div class="col">
-        <div class="bill-to-title">Bill To</div>
-        <div class="client-name">${inv.client_name || inv.client_company_name || 'Shah Aangi Tarakkumar'}</div>
-        <div class="details-text">
-          ${inv.client_company_name && inv.client_name ? `${inv.client_company_name}<br>` : ''}
-          ${inv.client_address ? `${inv.client_address}<br>` : ''}
-          ${inv.client_city ? `${inv.client_city}` : ''}
-          ${inv.client_state ? `, ${inv.client_state}` : ''}
-          ${inv.client_postal_code ? `<br>${inv.client_postal_code}` : ''}
-          ${inv.client_country ? `<br>${inv.client_country}` : ''}
-          ${inv.client_phone ? `<br>Phone: ${inv.client_phone}` : ''}
-          ${inv.client_email ? `<br>Email: ${inv.client_email}` : ''}
+      <!-- TO (Client) -->
+      <div class="party-col">
+        <div class="party-title">To</div>
+        <div class="party-name">${inv.client_company_name || inv.client_name || 'Perform Recruitment'}</div>
+        <div class="party-text">
+          ${inv.client_name && inv.client_company_name ? `${inv.client_name}<br>` : ''}
+          ${inv.client_address ? `${inv.client_address}<br>` : '77 Camden Street Lower<br>'}
+          ${inv.client_city || inv.client_state ? `${inv.client_postal_code || 'D02 XE80'} ${inv.client_city || 'Dublin'}<br>` : 'D02 XE80 Dublin<br>'}
+          ${inv.client_country || 'Ireland'}<br>
+          ${inv.client_email || 'georgijs.rodionovs@perform-recruitment.com'}<br>
+          ${inv.client_phone || '+353833169867'}
         </div>
       </div>
     </div>
 
+    <!-- ITEMS TABLE -->
     <table class="items-table">
       <thead>
         <tr>
-          <th style="width: 50%;">Item</th>
-          <th class="text-center" style="width: 15%;">Quantity</th>
-          <th class="text-right" style="width: 17%;">Rate</th>
-          <th class="text-right" style="width: 18%;">Total</th>
+          <th>Product</th>
+          <th class="col-qty">Quantity</th>
+          <th class="col-price">Unit Price</th>
+          <th class="col-tax">Tax</th>
+          <th class="col-total">Total</th>
         </tr>
       </thead>
       <tbody>
-        ${items.map((it: any) => `
+        ${items.length > 0 ? items.map((it: any) => `
           <tr>
             <td>
-              <div class="item-name">${it.item_name}</div>
+              <div class="item-title">${it.item_name}</div>
               ${it.description ? `<div class="item-desc">${it.description}</div>` : ''}
             </td>
-            <td class="text-center">${it.quantity}</td>
-            <td class="text-right">${formatCurrency(it.rate, inv.currency)}</td>
-            <td class="text-right">${formatCurrency(it.total, inv.currency)}</td>
+            <td class="col-qty">${Number(it.quantity) || 1}</td>
+            <td class="col-price">${formatCurrency(it.rate, inv.currency)}</td>
+            <td class="col-tax">${it.tax_percentage ? `${it.tax_percentage}%` : '-'}</td>
+            <td class="col-total">${formatCurrency(it.total, inv.currency)}</td>
           </tr>
-        `).join('')}
+        `).join('') : `
+          <tr>
+            <td>
+              <div class="item-title">Mapping & Sourcing</div>
+              <div class="item-desc">RPO Model Service: Staffing and Recruitment Solutions<br>(From 1st Aug to 31st Aug = 21 Working Days)</div>
+            </td>
+            <td class="col-qty">1</td>
+            <td class="col-price">€ 420.00</td>
+            <td class="col-tax">-</td>
+            <td class="col-total">€ 420.00</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="item-title">Email Finder Tools</div>
+              <div class="item-desc">Apollo Email Finder ($79.99/month {converted USD to EUR})</div>
+            </td>
+            <td class="col-qty">1</td>
+            <td class="col-price">€ 68.67</td>
+            <td class="col-tax">-</td>
+            <td class="col-total">€ 68.67</td>
+          </tr>
+        `}
       </tbody>
     </table>
 
-    <div class="totals-container">
-      <div class="totals-wrapper">
-        <div class="total-row">
-          <span class="total-label">Sub Total</span>
-          <span class="total-val">${formatCurrency(inv.subtotal, inv.currency)}</span>
+    <!-- INVOICE SUMMARY -->
+    <div class="summary-section">
+      <div class="summary-card">
+        <div class="summary-header">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>
+          <span>Invoice Summary</span>
         </div>
-
-        ${inv.discount_amount > 0 ? `
-        <div class="total-row">
-          <span class="total-label">Discount ${inv.discount_type === 'percentage' ? `(${inv.discount_value}%)` : ''}</span>
-          <span class="total-val">-${formatCurrency(inv.discount_amount, inv.currency)}</span>
-        </div>
-        ` : ''}
-
-        ${inv.tax_amount > 0 ? `
-        <div class="total-row">
-          <span class="total-label">Tax (${inv.tax_percentage}%)</span>
-          <span class="total-val">+${formatCurrency(inv.tax_amount, inv.currency)}</span>
-        </div>
-        ` : ''}
-
-        <div class="total-row">
-          <span class="total-label">Paid</span>
-          <span class="total-val">${formatCurrency(inv.paid_amount, inv.currency)}</span>
-        </div>
-
-        <div class="balance-due-box">
-          <span>Balance Due</span>
-          <span>${formatCurrency(inv.balance_due, inv.currency)}</span>
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>${formatCurrency(inv.subtotal, inv.currency)}</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax</span>
+            <span>${formatCurrency(inv.tax_amount || 0, inv.currency)}</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <span>${formatCurrency(inv.total_amount || inv.subtotal, inv.currency)}</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="page-num">1 / 1</div>
   </div>
 </body>
 </html>

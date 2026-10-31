@@ -15,8 +15,8 @@ export default function AdminOrganizationPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Logo state
-  const [fullLogoPreview, setFullLogoPreview] = useState<string>('/images/logoblue.png');
-  const [iconLogoPreview, setIconLogoPreview] = useState<string>('/images/Boxxlogo.png');
+  const [fullLogoPreview, setFullLogoPreview] = useState<string>('/images/xeoexperts-logo.jpg');
+  const [iconLogoPreview, setIconLogoPreview] = useState<string>('/images/xeoexperts-logo.jpg');
   const [fullLogoFile, setFullLogoFile] = useState<File | null>(null);
   const [iconLogoFile, setIconLogoFile] = useState<File | null>(null);
   const [fullLogoUrlInput, setFullLogoUrlInput] = useState<string>('');
@@ -213,7 +213,7 @@ export default function AdminOrganizationPage() {
                         src={fullLogoPreview}
                         alt="Primary Logo Preview"
                         className="max-h-12 max-w-[220px] object-contain"
-                        onError={() => setFullLogoPreview('/images/logoblue.png')}
+                        onError={() => setFullLogoPreview('/images/xeoexperts-logo.jpg')}
                       />
                     ) : (
                       <span className="text-xs text-slate-400">No logo selected</span>
@@ -288,7 +288,7 @@ export default function AdminOrganizationPage() {
                           src={iconLogoPreview}
                           alt="Icon Logo Preview"
                           className="w-full h-full object-contain"
-                          onError={() => setIconLogoPreview('/images/Boxxlogo.png')}
+                          onError={() => setIconLogoPreview('/images/xeoexperts-logo.jpg')}
                         />
                       </div>
                     ) : (

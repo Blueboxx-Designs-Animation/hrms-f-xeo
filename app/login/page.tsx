@@ -25,8 +25,8 @@ export default function LoginPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Dynamic Company Branding
-  const [companyLogo, setCompanyLogo] = useState<string>('/images/logoblue.png');
-  const [companyName, setCompanyName] = useState<string>('BlueBoxx DA Pvt. Ltd.');
+  const [companyLogo, setCompanyLogo] = useState<string>('/images/xeoexperts-logo.jpg');
+  const [companyName, setCompanyName] = useState<string>('XeoExperts');
 
   const { login } = useAuth();
   const router = useRouter();
@@ -82,7 +82,7 @@ export default function LoginPage() {
             src={companyLogo}
             alt={companyName}
             className="h-8 sm:h-9 w-auto max-w-[200px] object-contain"
-            onError={() => setCompanyLogo('/images/logoblue.png')}
+            onError={() => setCompanyLogo('/images/xeoexperts-logo.jpg')}
           />
         </div>
         <span className="text-[11px] font-medium text-slate-400">v4.2 Enterprise</span>

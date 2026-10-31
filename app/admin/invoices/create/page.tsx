@@ -1047,67 +1047,76 @@ export default function CreateInvoicePage() {
         onClose={() => setIsPreviewModalOpen(false)}
         title={`Live Preview: ${invoiceNumber}`}
       >
-        <div className="max-h-[75vh] overflow-y-auto pt-8 pb-6 px-6 bg-white border border-slate-200 shadow-sm space-y-6 text-xs text-slate-800">
-          <div className="flex justify-between items-start pt-2">
-            <div>
-              <img
-                src={user?.organization_logo || '/images/logoblue.png'}
-                alt="BLUEBOXX DA"
-                className="h-14 max-w-[220px] object-contain mb-2"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/Boxxlogo.png';
-                }}
-              />
-            </div>
+        <div className="max-h-[80vh] overflow-y-auto p-6 sm:p-8 bg-white border border-slate-200 shadow-sm text-xs text-slate-800 space-y-6">
+          {/* HEADER SECTION */}
+          <div className="flex justify-between items-start">
+            <img
+              src="/images/xeoexperts-logo.jpg"
+              alt="XeoExperts"
+              className="h-14 max-w-[220px] object-contain"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/images/xeoexperts-logo.jpg';
+              }}
+            />
             <div className="text-right">
-              <div className="bg-[#269784] text-white font-extrabold text-sm tracking-wider px-4 py-1.5 uppercase inline-block">
-                PERFORMA INVOICE
-              </div>
-              <div className="text-xs text-slate-500 mt-1.5">
-                Bill date: {invoiceDate}
+              <h1 className="text-3xl font-normal text-slate-900 tracking-tight">Invoice: {invoiceNumber ? String(invoiceNumber).replace(/^[^\d]*/, '') : '0024'}</h1>
+              <div className="text-[11px] text-slate-500 mt-1">Issued on: {invoiceDate}</div>
+              <div className="text-[11px] text-slate-500">Due by: {dueDate || invoiceDate}</div>
+            </div>
+          </div>
+
+          {/* TWO-COLUMN FROM / TO */}
+          <div className="grid grid-cols-2 gap-8 text-xs text-slate-700 pt-2">
+            <div>
+              <div className="font-bold text-slate-900 text-sm mb-1">From</div>
+              <div className="font-bold text-slate-900">XeoExperts</div>
+              <p className="text-slate-600 leading-relaxed">
+                Hardik Shah<br />
+                617 Ganesh Glory Gota<br />
+                382481 Ahmedabad<br />
+                India<br />
+                hardik.shah@xeoexperts.com<br />
+                +919904839139<br />
+                <a href="https://www.xeoexperts.com/" target="_blank" rel="noreferrer" className="text-slate-700 underline">https://www.xeoexperts.com/</a>
+              </p>
+            </div>
+
+            <div>
+              <div className="font-bold text-slate-900 text-sm mb-1">To</div>
+              <div className="font-bold text-slate-900">{clientCompanyName || clientName || 'Perform Recruitment'}</div>
+              <div className="text-slate-600 leading-relaxed">
+                {clientName && clientCompanyName && <p>{clientName}</p>}
+                <p>{clientAddress || '77 Camden Street Lower'}</p>
+                <p>{clientPostalCode || 'D02 XE80'} {clientCity || 'Dublin'}</p>
+                <p>{clientCountry || 'Ireland'}</p>
+                {clientEmail && <p>{clientEmail}</p>}
+                {clientPhone && <p>{clientPhone}</p>}
               </div>
             </div>
           </div>
 
-          <hr className="border-t border-slate-200 my-2" />
-
-          <div className="grid grid-cols-2 gap-6 text-xs text-slate-700">
-            <div>
-              <div className="font-bold text-slate-900 text-sm mb-1">Blueboxx DA</div>
-              <p className="text-slate-600">02, India Bulls Mall, Jetalpur Road, Vadodara</p>
-              <p className="text-slate-600">Phone: 9023512853</p>
-              <p className="text-slate-600">Website: http://www.blueboxx.in/</p>
-            </div>
-
-            <div>
-              <div className="font-bold text-slate-900 text-sm mb-1">Bill To</div>
-              <div className="font-semibold text-slate-900">{clientName || clientCompanyName || 'Client Name'}</div>
-              {clientCompanyName && clientName && <div className="text-slate-700">{clientCompanyName}</div>}
-              {clientAddress && <div className="text-slate-600">{clientAddress}</div>}
-              <div className="text-slate-600">{clientCity}{clientState ? `, ${clientState}` : ''} {clientPostalCode} {clientCountry}</div>
-              {clientPhone && <div className="text-slate-600">Phone: {clientPhone}</div>}
-            </div>
-          </div>
-
+          {/* ITEMS TABLE */}
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#269784] text-white font-bold text-xs">
-                <th className="py-2 px-3">Item</th>
-                <th className="py-2 px-3 text-center w-24">Quantity</th>
-                <th className="py-2 px-3 text-right w-28">Rate</th>
-                <th className="py-2 px-3 text-right w-32">Total</th>
+              <tr className="bg-[#dce0e9] text-slate-800 font-bold text-xs">
+                <th className="py-2.5 px-3">Product</th>
+                <th className="py-2.5 px-3 text-center w-20">Quantity</th>
+                <th className="py-2.5 px-3 text-right w-28">Unit Price</th>
+                <th className="py-2.5 px-3 text-center w-20">Tax</th>
+                <th className="py-2.5 px-3 text-right w-28">Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-200">
               {items.map((it, i) => (
-                <tr key={i} className={i % 2 === 1 ? 'bg-slate-50/50' : 'bg-white'}>
-                  <td className="py-2.5 px-3">
-                    <div className="font-semibold text-slate-900">{it.item_name || 'Item Name'}</div>
-                    {it.description && <div className="text-[11px] text-slate-500">{it.description}</div>}
+                <tr key={i} className="hover:bg-slate-50/50">
+                  <td className="py-3 px-3">
+                    <div className="font-bold text-slate-900">{it.item_name || 'Product'}</div>
+                    {it.description && <div className="text-[11px] text-slate-500 whitespace-pre-line mt-0.5">{it.description}</div>}
                   </td>
-                  <td className="py-2.5 px-3 text-center">{it.quantity}</td>
-                  <td className="py-2.5 px-3 text-right">{formatCurrency(it.rate, currency)}</td>
-                  <td className="py-2.5 px-3 text-right font-medium">
+                  <td className="py-3 px-3 text-center font-semibold">{it.quantity}</td>
+                  <td className="py-3 px-3 text-right font-semibold">{formatCurrency(it.rate, currency)}</td>
+                  <td className="py-3 px-3 text-center text-slate-500 font-semibold">{it.tax_percentage ? `${it.tax_percentage}%` : '-'}</td>
+                  <td className="py-3 px-3 text-right font-bold text-slate-900">
                     {formatCurrency(Math.max(0, (Number(it.quantity) || 0) * (Number(it.rate) || 0) - (Number(it.discount) || 0)), currency)}
                   </td>
                 </tr>
@@ -1115,21 +1124,26 @@ export default function CreateInvoicePage() {
             </tbody>
           </table>
 
-          <div className="flex justify-end text-xs">
-            <div className="w-72 space-y-1.5">
-              <div className="flex justify-between py-1 border-b border-slate-100 text-slate-700">
-                <span>Sub Total</span>
-                <span className="font-mono">{formatCurrency(subtotal, currency)}</span>
+          {/* SUMMARY CARD */}
+          <div className="flex justify-end pt-2">
+            <div className="w-72 border border-slate-200 rounded-md overflow-hidden">
+              <div className="bg-[#dce0e9] px-4 py-2 text-right font-bold text-slate-800 text-xs flex items-center justify-end gap-1.5">
+                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>
+                <span>Invoice Summary</span>
               </div>
-              {paidAmount > 0 && (
-                <div className="flex justify-between py-1 border-b border-slate-100 text-slate-700">
-                  <span>Paid</span>
-                  <span className="font-mono">{formatCurrency(paidAmount, currency)}</span>
+              <div className="p-3 space-y-1.5 text-xs text-slate-700 bg-white">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span className="font-semibold">{formatCurrency(subtotal, currency)}</span>
                 </div>
-              )}
-              <div className="flex justify-between items-center py-2 bg-[#269784] text-white px-3 font-bold mt-1">
-                <span>Balance Due</span>
-                <span className="font-mono">{formatCurrency(balanceDue, currency)}</span>
+                <div className="flex justify-between">
+                  <span>Tax</span>
+                  <span className="font-semibold">{formatCurrency(taxAmount || 0, currency)}</span>
+                </div>
+                <div className="flex justify-between pt-1.5 border-t border-slate-200 font-bold text-slate-900 text-sm">
+                  <span>Total</span>
+                  <span>{formatCurrency(balanceDue || totalAmount, currency)}</span>
+                </div>
               </div>
             </div>
           </div>

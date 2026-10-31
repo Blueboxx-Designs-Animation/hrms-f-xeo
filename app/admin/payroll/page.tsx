@@ -490,7 +490,7 @@ export default function AdminPayrollPage() {
                 ₹ {Number(p.net_salary || 0).toFixed(2)}
               </span>,
               <span key="mode" className="text-[11px] font-semibold text-slate-600 capitalize">
-                {p.payment_mode ? p.payment_mode.replace('_', ' ') : 'Bank Transfer'}
+                {p.payment_mode === 'gpay' ? 'G-Pay' : (p.payment_mode ? p.payment_mode.replace('_', ' ') : 'Bank Transfer')}
               </span>,
               <Badge key="status" variant={p.status === 'paid' ? 'green' : 'yellow'}>
                 {p.status}
@@ -596,6 +596,7 @@ export default function AdminPayrollPage() {
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-white"
               >
                 <option value="bank_transfer">Bank Transfer (NEFT/RTGS)</option>
+                <option value="gpay">G-Pay (Google Pay / UPI)</option>
                 <option value="cheque">Company Cheque</option>
                 <option value="cash">Cash</option>
               </select>
@@ -719,6 +720,7 @@ export default function AdminPayrollPage() {
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-slate-50 font-semibold"
               >
                 <option value="bank_transfer">Bank Transfer (NEFT/RTGS)</option>
+                <option value="gpay">G-Pay (Google Pay / UPI)</option>
                 <option value="cheque">Company Cheque</option>
                 <option value="cash">Cash</option>
               </select>

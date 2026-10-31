@@ -92,7 +92,6 @@ export function Sidebar() {
       { label: 'Attendance', href: '/admin/attendance', icon: Clock },
       { label: 'Leave', href: '/admin/leave', icon: CalendarDays },
       { label: 'Recruitment ATS', href: '/hr/recruitment', icon: UserCheck },
-      { label: 'Expenses', href: '/expenses', icon: CreditCard },
       { label: 'Timesheets', href: '/timesheets', icon: Clock },
       { label: 'Assets', href: '/assets', icon: Building2 },
       { label: 'Helpdesk', href: '/helpdesk', icon: FileText },
@@ -113,7 +112,6 @@ export function Sidebar() {
       { label: 'Tasks', href: '/hr/tasks', icon: ListTodo },
       { label: 'Attendance', href: '/hr/attendance', icon: Clock },
       { label: 'Leave', href: '/hr/leave', icon: CalendarDays },
-      { label: 'Expenses', href: '/expenses', icon: CreditCard },
       { label: 'Timesheets', href: '/timesheets', icon: Clock },
       { label: 'Asset Register', href: '/assets', icon: Building2 },
       { label: 'HR Helpdesk', href: '/helpdesk', icon: FileText },
@@ -131,7 +129,6 @@ export function Sidebar() {
       { label: 'Performance', href: '/admin/performance', icon: TrendingUp },
       { label: 'Vault & Reports', href: '/manager/documents', icon: FileText },
       { label: 'Timesheets', href: '/timesheets', icon: Clock },
-      { label: 'Expenses', href: '/expenses', icon: CreditCard },
       { label: 'Helpdesk', href: '/helpdesk', icon: FileText },
       { label: 'Reports', href: '/manager/reports', icon: FileText },
       { label: 'My Profile', href: '/profile', icon: User },
@@ -157,7 +154,6 @@ export function Sidebar() {
       { label: 'My Performance', href: '/employee/performance', icon: TrendingUp },
       { label: 'Attendance', href: '/employee/attendance', icon: Clock },
       { label: 'Leave', href: '/employee/leave', icon: CalendarDays },
-      { label: 'Expenses', href: '/expenses', icon: CreditCard },
       { label: 'Timesheets', href: '/timesheets', icon: Clock },
       { label: 'My Assets', href: '/assets', icon: Building2 },
       { label: 'Helpdesk', href: '/helpdesk', icon: FileText },
@@ -208,24 +204,24 @@ export function Sidebar() {
         >
           {!isDrawer && isCollapsed ? (
             <img
-              src={user?.organization_icon_logo || user?.organization_logo || '/images/Boxxlogo.png'}
-              alt={user?.organization || 'Company Logo'}
+              src={user?.organization_icon_logo || user?.organization_logo || '/images/xeoexperts-logo.jpg'}
+              alt={user?.organization || 'XeoExperts'}
               className="w-8 h-8 object-contain shrink-0"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/images/Boxxlogo.png';
+                (e.target as HTMLImageElement).src = '/images/xeoexperts-logo.jpg';
               }}
             />
           ) : (
             <div className="flex flex-col min-w-0">
               <img
-                src={user?.organization_logo || '/images/logoblue.png'}
-                alt={user?.organization || 'Company Logo'}
-                className="h-7 w-auto max-w-[170px] object-contain object-left"
+                src={user?.organization_logo || '/images/xeoexperts-logo.jpg'}
+                alt={user?.organization || 'XeoExperts'}
+                className="h-9 w-auto max-w-[180px] object-contain object-left"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/logoblue.png';
+                  (e.target as HTMLImageElement).src = '/images/xeoexperts-logo.jpg';
                 }}
               />
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1.5 truncate">
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1 truncate">
                 {portalTitleMap[activeNamespace]}
               </p>
             </div>

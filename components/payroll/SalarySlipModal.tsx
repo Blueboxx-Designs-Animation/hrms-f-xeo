@@ -361,13 +361,12 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
           <div class="page-sheet">
             <div>
               <!-- HEADER -->
-              <div class="header-flex">
-                <div style="display: flex; align-items: center;">
-                  <div class="logo-box">B</div>
+              <div class="header-flex" style="align-items: center; border-bottom: 2px solid #081e3a; padding-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <img src="${company.logo_url || '/images/xeoexperts-logo.jpg'}" alt="XeoExperts" style="height: 60px; max-width: 220px; object-fit: contain;" onerror="this.src='/images/xeoexperts-logo.jpg'" />
                   <div>
-                    <div class="brand-title">${company.brand_title || 'BLUEBOXX DA'}</div>
-                    <div class="brand-subtitle">${company.brand_subtitle || 'PVT. LTD.'}</div>
-                    <div class="brand-tagline">${company.tagline || 'LEARNING TODAY, LEADING TOMORROW'}</div>
+                    <div style="font-size: 22px; font-weight: 900; color: #081e3a; letter-spacing: -0.5px;">${company.brand_title || 'XeoExperts'}</div>
+                    <div style="font-size: 11px; font-weight: 700; color: #e69a0e; text-transform: uppercase; letter-spacing: 1px;">${company.tagline || 'Building The Better Future'}</div>
                   </div>
                 </div>
 
@@ -400,7 +399,7 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
                   </div>
                   <div class="pay-info-row">
                     <span style="font-weight: 800; text-transform: uppercase; font-size: 9.5px; color: #081e3a;">Payment Mode</span>
-                    <span style="font-weight: 800; color: #0f172a; text-transform: capitalize;">${payment_mode?.replace('_', ' ') || 'Bank Transfer'}</span>
+                    <span style="font-weight: 800; color: #0f172a; text-transform: capitalize;">${payment_mode === 'gpay' || payment_mode === 'G-Pay' ? 'G-Pay (Google Pay / UPI)' : (payment_mode?.replace('_', ' ') || 'Bank Transfer')}</span>
                   </div>
                 </div>
               </div>
@@ -579,18 +578,21 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
           {/* HEADER ROW */}
           <div className="flex items-start justify-between gap-4 pb-2">
             <div className="flex items-center gap-3">
-              <div className="w-13 h-13 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-sm shrink-0 border-2 border-amber-400 bg-[#081e3a]">
-                B
-              </div>
+              <img
+                src={company.logo_url || '/images/xeoexperts-logo.jpg'}
+                alt="XeoExperts"
+                className="h-14 w-auto max-w-[200px] object-contain shrink-0"
+                onError={(e: any) => { e.currentTarget.src = '/images/xeoexperts-logo.jpg'; }}
+              />
               <div>
                 <h1 className="font-black text-2xl tracking-tight text-[#081e3a] uppercase leading-none">
-                  {company.brand_title || 'BLUEBOXX DA'}
+                  {company.brand_title || 'XEOEXPERTS'}
                 </h1>
-                <p className="font-black text-xs text-[#081e3a] tracking-wider uppercase mt-1">
-                  {company.brand_subtitle || 'PVT. LTD.'}
+                <p className="font-black text-xs text-[#e69a0e] tracking-wider uppercase mt-1">
+                  {company.brand_subtitle || 'BUILDING THE BETTER FUTURE'}
                 </p>
                 <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-1">
-                  {company.tagline || 'LEARNING TODAY, LEADING TOMORROW'}
+                  {company.tagline || 'Building The Better Future'}
                 </p>
               </div>
             </div>
@@ -637,7 +639,7 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               </div>
               <div className="flex p-1.5">
                 <span className="font-extrabold text-[#081e3a] w-1/2 uppercase text-[10px]">PAYMENT MODE</span>
-                <span className="font-bold text-slate-800 w-1/2 text-right capitalize">{payment_mode?.replace('_', ' ') || 'Bank Transfer'}</span>
+                <span className="font-bold text-slate-800 w-1/2 text-right capitalize">{payment_mode === 'gpay' || payment_mode === 'G-Pay' ? 'G-Pay (Google Pay / UPI)' : (payment_mode?.replace('_', ' ') || 'Bank Transfer')}</span>
               </div>
             </div>
           </div>

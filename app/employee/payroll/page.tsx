@@ -93,7 +93,7 @@ export default function EmployeePayslipsPage() {
                 ₹ {Number(p.net_salary || 0).toFixed(2)}
               </span>,
               <span key="mode" className="text-[11px] font-semibold text-slate-600 capitalize">
-                {p.payment_mode ? p.payment_mode.replace('_', ' ') : 'Bank Transfer'}
+                {p.payment_mode === 'gpay' ? 'G-Pay' : (p.payment_mode ? p.payment_mode.replace('_', ' ') : 'Bank Transfer')}
               </span>,
               <Badge key="status" variant={p.status === 'paid' ? 'green' : 'yellow'}>
                 {p.status}

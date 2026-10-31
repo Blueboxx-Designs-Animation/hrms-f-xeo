@@ -582,6 +582,7 @@ export default function AdminInvoicesPage() {
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs bg-white font-medium"
               >
                 <option value="Bank Transfer">NEFT / RTGS / Bank Transfer</option>
+                <option value="G-Pay">G-Pay (Google Pay / UPI)</option>
                 <option value="UPI / QR">UPI / QR Code</option>
                 <option value="Credit Card">Corporate Credit Card</option>
                 <option value="Cheque">Cheque</option>
