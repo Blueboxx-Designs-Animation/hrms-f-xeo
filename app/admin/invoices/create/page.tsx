@@ -1142,7 +1142,7 @@ export default function CreateInvoicePage() {
                 </div>
                 <div className="flex justify-between pt-1.5 border-t border-slate-200 font-bold text-slate-900 text-sm">
                   <span>Total</span>
-                  <span>{formatCurrency(balanceDue || totalAmount, currency)}</span>
+                  <span>{formatCurrency(balanceDue || grandTotal, currency)}</span>
                 </div>
               </div>
             </div>
