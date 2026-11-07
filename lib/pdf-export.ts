@@ -34,12 +34,12 @@ export function downloadInvoiceAsPDF(invoice: any, company: any) {
   };
 }
 
-export function formatCurrency(amount: number | string | undefined | null, currency = 'EUR'): string {
+export function formatCurrency(amount: number | string | undefined | null, currency = 'INR'): string {
   const num = typeof amount === 'string' ? parseFloat(amount) : (amount || 0);
-  if (isNaN(num)) return '€ 0.00';
+  if (isNaN(num)) return '₹ 0.00';
   
-  const symbol = currency === 'USD' ? '$ ' : currency === 'EUR' ? '€ ' : currency === 'GBP' ? '£ ' : currency === 'INR' ? '₹ ' : `${currency} `;
-  return `${symbol}${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const symbol = currency === 'USD' ? '$ ' : currency === 'EUR' ? '€ ' : currency === 'GBP' ? '£ ' : '₹ ';
+  return `${symbol}${num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function generatePrintableInvoiceHTML(invoice: any, company: any): string {
