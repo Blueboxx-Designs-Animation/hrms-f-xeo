@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} bg-slate-50 text-slate-900 min-h-screen antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} bg-slate-50 text-slate-900 min-h-screen antialiased`} suppressHydrationWarning>
         <ChunkErrorListener />
         <ThemeProvider>
           <AuthProvider>{children}</AuthProvider>
