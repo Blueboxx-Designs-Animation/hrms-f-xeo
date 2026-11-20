@@ -493,9 +493,12 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
                 </div>
 
                 <div class="signatory-box">
-                  <div class="signatory-line">
-                    <div style="font-size: 10px; font-weight: 900; color: #081e3a; text-transform: uppercase; letter-spacing: 1px;">AUTHORIZED SIGNATORY</div>
-                    <div style="font-size: 9px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 2px;">${company.name || 'BLUEBOXX DA PVT. LTD.'}</div>
+                  <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <img src="/images/hardik-shah-signature.png" alt="Hardik J. Shah" style="height: 48px; max-width: 170px; object-fit: contain; margin-bottom: -10px; margin-right: 15px; position: relative; z-index: 1;" />
+                    <div class="signatory-line" style="position: relative; z-index: 2;">
+                      <div style="font-size: 10px; font-weight: 900; color: #081e3a; text-transform: uppercase; letter-spacing: 1px;">AUTHORIZED SIGNATORY</div>
+                      <div style="font-size: 9px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 2px;">${company.name || 'BLUEBOXX DA PVT. LTD.'}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -747,13 +750,20 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
             </div>
 
             <div className="text-center">
-              <div className="border-t border-slate-700 w-44 ml-auto pt-1">
-                <span className="font-black text-[10px] text-[#081e3a] uppercase block tracking-wider">
-                  AUTHORIZED SIGNATORY
-                </span>
-                <span className="text-[9px] text-slate-500 font-bold block uppercase">
-                  {company.name || 'BLUEBOXX DA PVT. LTD.'}
-                </span>
+              <div className="flex flex-col items-end">
+                <img
+                  src="/images/hardik-shah-signature.png"
+                  alt="Hardik J. Shah"
+                  className="h-12 w-44 object-contain -mb-2.5 mr-3 relative z-1 pointer-events-none select-none"
+                />
+                <div className="border-t border-slate-700 w-44 ml-auto pt-1 relative z-2">
+                  <span className="font-black text-[10px] text-[#081e3a] uppercase block tracking-wider">
+                    AUTHORIZED SIGNATORY
+                  </span>
+                  <span className="text-[9px] text-slate-500 font-bold block uppercase">
+                    {company.name || 'BLUEBOXX DA PVT. LTD.'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
