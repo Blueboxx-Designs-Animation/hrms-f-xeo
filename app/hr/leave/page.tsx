@@ -13,12 +13,9 @@ import { useAuth } from '@/lib/auth-context';
 import { Plus, Download, CheckCircle, XCircle, Clock, Users, UserCheck } from '@/components/ui/Icon';
 
 const DEFAULT_LEAVE_TYPES = [
-  { id: 1, name: 'Casual Leave (CL)', annual_quota: 12 },
-  { id: 2, name: 'Sick Leave (SL)', annual_quota: 10 },
-  { id: 3, name: 'Earned / Privilege Leave (PL)', annual_quota: 15 },
-  { id: 4, name: 'Maternity / Paternity Leave', annual_quota: 30 },
-  { id: 5, name: 'Compensatory Off (Comp-Off)', annual_quota: 5 },
-  { id: 6, name: 'Unpaid Leave (LOP)', annual_quota: 0 },
+  { id: 1, name: 'Personal Leave', annual_quota: 5 },
+  { id: 2, name: 'Casual Leave', annual_quota: 5 },
+  { id: 3, name: 'Privilege Leave (PL)', annual_quota: 5 },
 ];
 
 export default function HRLeavePage() {

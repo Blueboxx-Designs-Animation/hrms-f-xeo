@@ -49,10 +49,9 @@ export function WorkforceReportsAnalytics({ portalNamespace = 'hr' }: WorkforceR
       ]);
 
       const defaultCategories = [
-        { leave_type: 'Casual Leave', code: 'CL', max_days_per_year: 12, total_days_taken: 1, requests: [] },
-        { leave_type: 'Sick Leave', code: 'SL', max_days_per_year: 10, total_days_taken: 0, requests: [] },
-        { leave_type: 'Earned Leave', code: 'EL', max_days_per_year: 15, total_days_taken: 0, requests: [] },
-        { leave_type: 'Maternity Leave', code: 'ML', max_days_per_year: 84, total_days_taken: 0, requests: [] },
+        { leave_type: 'Personal Leave', code: 'PerL', max_days_per_year: 5, total_days_taken: 0, requests: [] },
+        { leave_type: 'Casual Leave', code: 'CL', max_days_per_year: 5, total_days_taken: 0, requests: [] },
+        { leave_type: 'Privilege Leave (PL)', code: 'PL', max_days_per_year: 5, total_days_taken: 0, requests: [] },
       ];
 
       setHeadcount(hcRes);
