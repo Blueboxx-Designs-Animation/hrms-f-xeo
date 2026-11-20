@@ -435,10 +435,6 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
                     <span class="field-label">Department :</span>
                     <span class="field-value">${employee.department || 'General'}</span>
                   </div>
-                  <div class="field-row">
-                    <span class="field-label">Bank A/C No. :</span>
-                    <span class="field-value" style="font-family: monospace;">${employee.bank_account_no || 'N/A'}</span>
-                  </div>
                 </div>
               </div>
 
@@ -540,9 +536,8 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
             >
               {pay_period_month} {pay_period_year}
             </span>
-            <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold capitalize ${
-              status === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-            }`}>
+            <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold capitalize ${status === 'paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+              }`}>
               {status}
             </span>
           </div>
@@ -674,11 +669,6 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
                 <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">DEPARTMENT :</span>
                 <span className="font-bold text-slate-900 truncate">{employee.department || 'General'}</span>
-              </div>
-
-              <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
-                <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">BANK A/C NO. :</span>
-                <span className="font-bold text-slate-900 font-mono">{employee.bank_account_no || 'N/A'}</span>
               </div>
             </div>
           </div>
