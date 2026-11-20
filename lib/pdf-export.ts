@@ -320,7 +320,7 @@ export function generatePrintableInvoiceHTML(invoice: any, company: any): string
             </td>
             <td class="col-qty">${Number(it.quantity) || 1}</td>
             <td class="col-price">${formatCurrency(it.rate, inv.currency)}</td>
-            <td class="col-tax">${it.tax_percentage ? `${it.tax_percentage}%` : '-'}</td>
+            <td class="col-tax">${Number(it.tax_percentage) > 0 ? `${it.tax_percentage}%` : '-'}</td>
             <td class="col-total">${formatCurrency(it.total, inv.currency)}</td>
           </tr>
         `).join('') : `
@@ -360,10 +360,18 @@ export function generatePrintableInvoiceHTML(invoice: any, company: any): string
             <span>Subtotal</span>
             <span>${formatCurrency(inv.subtotal, inv.currency)}</span>
           </div>
+          ${Number(inv.discount_amount) > 0 ? `
+          <div class="summary-row" style="color: #059669;">
+            <span>Discount</span>
+            <span>-${formatCurrency(inv.discount_amount, inv.currency)}</span>
+          </div>
+          ` : ''}
+          ${Number(inv.tax_amount) > 0 ? `
           <div class="summary-row">
             <span>Tax</span>
-            <span>${formatCurrency(inv.tax_amount || 0, inv.currency)}</span>
+            <span>+${formatCurrency(inv.tax_amount, inv.currency)}</span>
           </div>
+          ` : ''}
           <div class="summary-row total-row">
             <span>Total</span>
             <span>${formatCurrency(inv.total_amount || inv.subtotal, inv.currency)}</span>

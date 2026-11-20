@@ -1115,7 +1115,9 @@ export default function CreateInvoicePage() {
                   </td>
                   <td className="py-3 px-3 text-center font-semibold">{it.quantity}</td>
                   <td className="py-3 px-3 text-right font-semibold">{formatCurrency(it.rate, currency)}</td>
-                  <td className="py-3 px-3 text-center text-slate-500 font-semibold">{it.tax_percentage ? `${it.tax_percentage}%` : '-'}</td>
+                  <td className="py-3 px-3 text-center text-slate-500 font-semibold">
+                    {Number(it.tax_percentage) > 0 ? `${it.tax_percentage}%` : '-'}
+                  </td>
                   <td className="py-3 px-3 text-right font-bold text-slate-900">
                     {formatCurrency(Math.max(0, (Number(it.quantity) || 0) * (Number(it.rate) || 0) - (Number(it.discount) || 0)), currency)}
                   </td>
@@ -1136,10 +1138,18 @@ export default function CreateInvoicePage() {
                   <span>Subtotal</span>
                   <span className="font-semibold">{formatCurrency(subtotal, currency)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Tax</span>
-                  <span className="font-semibold">{formatCurrency(taxAmount || 0, currency)}</span>
-                </div>
+                {safeDiscount > 0 && (
+                  <div className="flex justify-between text-emerald-600">
+                    <span>Discount</span>
+                    <span className="font-semibold">-{formatCurrency(safeDiscount, currency)}</span>
+                  </div>
+                )}
+                {taxAmount > 0 && (
+                  <div className="flex justify-between">
+                    <span>Tax</span>
+                    <span className="font-semibold">+{formatCurrency(taxAmount, currency)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between pt-1.5 border-t border-slate-200 font-bold text-slate-900 text-sm">
                   <span>Total</span>
                   <span>{formatCurrency(balanceDue || grandTotal, currency)}</span>

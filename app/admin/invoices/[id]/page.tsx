@@ -284,7 +284,7 @@ export default function InvoiceDetailsPage() {
                     {formatCurrency(it.rate, invoice.currency)}
                   </td>
                   <td className="py-3 px-4 text-center text-slate-500 font-semibold">
-                    {it.tax_percentage ? `${it.tax_percentage}%` : '-'}
+                    {Number(it.tax_percentage) > 0 ? `${it.tax_percentage}%` : '-'}
                   </td>
                   <td className="py-3 px-4 text-right font-bold text-slate-900">
                     {formatCurrency(it.total, invoice.currency)}
@@ -307,10 +307,18 @@ export default function InvoiceDetailsPage() {
                 <span>Subtotal</span>
                 <span className="font-semibold">{formatCurrency(invoice.subtotal, invoice.currency)}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Tax</span>
-                <span className="font-semibold">{formatCurrency(invoice.tax_amount || 0, invoice.currency)}</span>
-              </div>
+              {Number(invoice.discount_amount) > 0 && (
+                <div className="flex justify-between text-emerald-600">
+                  <span>Discount</span>
+                  <span className="font-semibold">-{formatCurrency(invoice.discount_amount, invoice.currency)}</span>
+                </div>
+              )}
+              {Number(invoice.tax_amount) > 0 && (
+                <div className="flex justify-between">
+                  <span>Tax</span>
+                  <span className="font-semibold">+{formatCurrency(invoice.tax_amount, invoice.currency)}</span>
+                </div>
+              )}
               <div className="flex justify-between pt-1.5 border-t border-slate-200 font-bold text-slate-900 text-sm">
                 <span>Total</span>
                 <span>{formatCurrency(invoice.total_amount || invoice.subtotal, invoice.currency)}</span>
