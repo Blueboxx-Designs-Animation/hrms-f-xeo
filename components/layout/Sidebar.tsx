@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuth, canAccessNamespace, getRoleDefaultRoute } from '@/lib/auth-context';
+import { useAuth } from '@/lib/auth-context';
 import { useTheme } from '@/lib/theme-context';
 import { fetchApi } from '@/lib/api';
 import {
@@ -36,17 +36,16 @@ export function Sidebar() {
   const { user, token, logout } = useAuth();
   const { isCollapsed, toggleSidebarCollapse, isMobileMenuOpen, closeMobileMenu } = useTheme();
 
-  const role = user?.role || 'employee';
-
   // Automatically close mobile menu whenever route changes
   useEffect(() => {
     closeMobileMenu();
   }, [pathname]);
 
   // Determine user's primary role for sidebar menu items
-  const userRole = (typeof user?.role === 'object' ? (user.role as any)?.name : user?.role || 'employee').toString().toLowerCase();
+  const userRole = (user?.role_name || (typeof user?.role === 'object' ? (user.role as any)?.name : user?.role) || 'employee').toString().toLowerCase();
+  const userPermissions: string[] = Array.isArray(user?.role_permissions) ? user.role_permissions : [];
 
-  // If user is Admin, they should always see Admin sidebar menu across all pages
+  // Determine namespace
   let activeNamespace: 'admin' | 'hr' | 'manager' | 'team_leader' | 'employee' = 'employee';
   if (userRole === 'admin') {
     activeNamespace = 'admin';
@@ -56,13 +55,13 @@ export function Sidebar() {
     activeNamespace = 'manager';
   } else if (userRole === 'team_leader' || userRole === 'tl' || userRole === 'team_lead') {
     activeNamespace = 'team_leader';
-  } else if (pathname.startsWith('/admin')) {
+  } else if (pathname.startsWith('/admin') && (userRole === 'admin' || userPermissions.includes('all'))) {
     activeNamespace = 'admin';
-  } else if (pathname.startsWith('/hr')) {
+  } else if (pathname.startsWith('/hr') && userRole === 'hr') {
     activeNamespace = 'hr';
-  } else if (pathname.startsWith('/manager')) {
+  } else if (pathname.startsWith('/manager') && (userRole === 'manager' || userRole === 'company_manager')) {
     activeNamespace = 'manager';
-  } else if (pathname.startsWith('/team-leader')) {
+  } else if (pathname.startsWith('/team-leader') && userRole === 'team_leader') {
     activeNamespace = 'team_leader';
   } else {
     activeNamespace = 'employee';
@@ -70,95 +69,96 @@ export function Sidebar() {
 
   const portalTitleMap = {
     admin: 'ADMIN PORTAL',
-    hr: role === 'admin' ? 'ADMIN PORTAL' : 'HR PORTAL',
-    manager: role === 'admin' ? 'ADMIN PORTAL' : 'COMPANY MANAGER PORTAL',
-    team_leader: role === 'admin' ? 'ADMIN PORTAL' : 'TEAM LEADER PORTAL',
-    employee: role === 'admin' ? 'ADMIN PORTAL' : 'EMPLOYEE PORTAL',
+    hr: userRole === 'admin' ? 'ADMIN PORTAL' : 'HR PORTAL',
+    manager: userRole === 'admin' ? 'ADMIN PORTAL' : 'COMPANY MANAGER PORTAL',
+    team_leader: userRole === 'admin' ? 'ADMIN PORTAL' : 'TEAM LEADER PORTAL',
+    employee: userRole === 'admin' ? 'ADMIN PORTAL' : (user?.role_display ? `${user.role_display.toUpperCase()} PORTAL` : 'EMPLOYEE PORTAL'),
   };
 
   // Namespace specific navigation menus
   const menuItemsMap = {
     admin: [
-      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-      { label: 'AI Assistant', href: '/admin/assistant', icon: Sparkles },
-      { label: 'Notifications', href: '/notifications', icon: Megaphone },
-      { label: 'Users & Master', href: '/admin/users', icon: Users },
-      { label: 'Document Vault', href: '/admin/documents', icon: FileText },
-      { label: 'Departments', href: '/admin/departments', icon: Building2 },
-      { label: 'Invoices', href: '/admin/invoices', icon: Receipt },
-      { label: 'Payroll & Slips', href: '/admin/payroll', icon: CreditCard },
-      { label: 'Tasks', href: '/admin/tasks', icon: ListTodo },
-      { label: 'Performance', href: '/admin/performance', icon: TrendingUp },
-      { label: 'Attendance', href: '/admin/attendance', icon: Clock },
-      { label: 'Leave', href: '/admin/leave', icon: CalendarDays },
-      { label: 'Recruitment ATS', href: '/hr/recruitment', icon: UserCheck },
-      { label: 'Timesheets', href: '/timesheets', icon: Clock },
-      { label: 'Assets', href: '/assets', icon: Building2 },
-      { label: 'Helpdesk', href: '/helpdesk', icon: FileText },
-      { label: 'Roles', href: '/admin/roles', icon: ShieldCheck },
-      { label: 'Permissions', href: '/admin/permissions', icon: CheckSquare },
-      { label: 'Organization', href: '/admin/organization', icon: Building2 },
-      { label: 'Settings', href: '/admin/settings', icon: Settings },
-      { label: 'Audit Logs', href: '/admin/audit-logs', icon: FileText },
-      { label: 'My Profile', href: '/profile', icon: User },
+      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, module: 'dashboard' },
+      { label: 'AI Assistant', href: '/admin/assistant', icon: Sparkles, module: 'assistant' },
+      { label: 'Notifications', href: '/notifications', icon: Megaphone, module: 'notifications' },
+      { label: 'Users & Master', href: '/admin/users', icon: Users, module: 'users' },
+      { label: 'Document Vault', href: '/admin/documents', icon: FileText, module: 'documents' },
+      { label: 'Departments', href: '/admin/departments', icon: Building2, module: 'departments' },
+      { label: 'Invoices', href: '/admin/invoices', icon: Receipt, module: 'invoices' },
+      { label: 'Payroll & Slips', href: '/admin/payroll', icon: CreditCard, module: 'payroll' },
+      { label: 'Tasks', href: '/admin/tasks', icon: ListTodo, module: 'tasks' },
+      { label: 'Performance', href: '/admin/performance', icon: TrendingUp, module: 'performance' },
+      { label: 'Attendance', href: '/admin/attendance', icon: Clock, module: 'attendance' },
+      { label: 'Leave', href: '/admin/leave', icon: CalendarDays, module: 'leave' },
+      { label: 'Recruitment ATS', href: '/hr/recruitment', icon: UserCheck, module: 'recruitment' },
+      { label: 'Timesheets', href: '/timesheets', icon: Clock, module: 'timesheets' },
+      { label: 'Assets', href: '/assets', icon: Building2, module: 'assets' },
+      { label: 'Helpdesk', href: '/helpdesk', icon: FileText, module: 'helpdesk' },
+      { label: 'Roles', href: '/admin/roles', icon: ShieldCheck, module: 'roles' },
+      { label: 'Permissions', href: '/admin/permissions', icon: CheckSquare, module: 'permissions' },
+      { label: 'Organization', href: '/admin/organization', icon: Building2, module: 'organization' },
+      { label: 'Settings', href: '/admin/settings', icon: Settings, module: 'settings' },
+      { label: 'Audit Logs', href: '/admin/audit-logs', icon: FileText, module: 'audit_logs' },
+      { label: 'My Profile', href: '/profile', icon: User, module: 'profile' },
     ],
     hr: [
-      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-      { label: 'HR Assistant', href: '/hr/assistant', icon: Sparkles },
-      { label: 'Notifications', href: '/notifications', icon: Megaphone },
-      { label: 'Employees', href: '/hr/employees', icon: Users },
-      { label: 'Document Vault', href: '/hr/documents', icon: FileText },
-      { label: 'Recruitment & ATS', href: '/hr/recruitment', icon: UserCheck },
-      { label: 'Tasks', href: '/hr/tasks', icon: ListTodo },
-      { label: 'Attendance', href: '/hr/attendance', icon: Clock },
-      { label: 'Leave', href: '/hr/leave', icon: CalendarDays },
-      { label: 'Timesheets', href: '/timesheets', icon: Clock },
-      { label: 'Asset Register', href: '/assets', icon: Building2 },
-      { label: 'HR Helpdesk', href: '/helpdesk', icon: FileText },
-      { label: 'Reports', href: '/hr/reports', icon: FileText },
-      { label: 'Announcements', href: '/hr/announcements', icon: Megaphone },
-      { label: 'My Profile', href: '/profile', icon: User },
+      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, module: 'dashboard' },
+      { label: 'HR Assistant', href: '/hr/assistant', icon: Sparkles, module: 'assistant' },
+      { label: 'Notifications', href: '/notifications', icon: Megaphone, module: 'notifications' },
+      { label: 'Employees', href: '/hr/employees', icon: Users, module: 'employees' },
+      { label: 'Document Vault', href: '/hr/documents', icon: FileText, module: 'documents' },
+      { label: 'Recruitment & ATS', href: '/hr/recruitment', icon: UserCheck, module: 'recruitment' },
+      { label: 'Tasks', href: '/hr/tasks', icon: ListTodo, module: 'tasks' },
+      { label: 'Attendance', href: '/hr/attendance', icon: Clock, module: 'attendance' },
+      { label: 'Leave', href: '/hr/leave', icon: CalendarDays, module: 'leave' },
+      { label: 'Timesheets', href: '/timesheets', icon: Clock, module: 'timesheets' },
+      { label: 'Asset Register', href: '/assets', icon: Building2, module: 'assets' },
+      { label: 'HR Helpdesk', href: '/helpdesk', icon: FileText, module: 'helpdesk' },
+      { label: 'Reports', href: '/hr/reports', icon: FileText, module: 'reports' },
+      { label: 'Announcements', href: '/hr/announcements', icon: Megaphone, module: 'announcements' },
+      { label: 'My Profile', href: '/profile', icon: User, module: 'profile' },
     ],
     manager: [
-      { label: 'Dashboard', href: '/manager/dashboard', icon: LayoutDashboard },
-      { label: 'Team Assistant', href: '/manager/assistant', icon: Sparkles },
-      { label: 'Notifications', href: '/notifications', icon: Megaphone },
-      { label: 'Team Leaders', href: '/manager/team', icon: Users },
-      { label: 'Employees', href: '/manager/employees', icon: UserCheck },
-      { label: 'Team Tasks', href: '/manager/tasks', icon: ListTodo },
-      { label: 'Performance', href: '/admin/performance', icon: TrendingUp },
-      { label: 'Vault & Reports', href: '/manager/documents', icon: FileText },
-      { label: 'Timesheets', href: '/timesheets', icon: Clock },
-      { label: 'Helpdesk', href: '/helpdesk', icon: FileText },
-      { label: 'Reports', href: '/manager/reports', icon: FileText },
-      { label: 'My Profile', href: '/profile', icon: User },
+      { label: 'Dashboard', href: '/manager/dashboard', icon: LayoutDashboard, module: 'dashboard' },
+      { label: 'Team Assistant', href: '/manager/assistant', icon: Sparkles, module: 'assistant' },
+      { label: 'Notifications', href: '/notifications', icon: Megaphone, module: 'notifications' },
+      { label: 'Team Leaders', href: '/manager/team', icon: Users, module: 'team' },
+      { label: 'Employees', href: '/manager/employees', icon: UserCheck, module: 'employees' },
+      { label: 'Team Tasks', href: '/manager/tasks', icon: ListTodo, module: 'tasks' },
+      { label: 'Performance', href: '/admin/performance', icon: TrendingUp, module: 'performance' },
+      { label: 'Vault & Reports', href: '/manager/documents', icon: FileText, module: 'documents' },
+      { label: 'Timesheets', href: '/timesheets', icon: Clock, module: 'timesheets' },
+      { label: 'Helpdesk', href: '/helpdesk', icon: FileText, module: 'helpdesk' },
+      { label: 'Reports', href: '/manager/reports', icon: FileText, module: 'reports' },
+      { label: 'My Profile', href: '/profile', icon: User, module: 'profile' },
     ],
     team_leader: [
-      { label: 'Dashboard', href: '/team-leader/dashboard', icon: LayoutDashboard },
-      { label: 'Team Assistant', href: '/team-leader/assistant', icon: Sparkles },
-      { label: 'Notifications', href: '/notifications', icon: Megaphone },
-      { label: 'My Team', href: '/team-leader/team', icon: Users },
-      { label: 'Tasks', href: '/team-leader/tasks', icon: ListTodo },
-      { label: 'Performance', href: '/admin/performance', icon: TrendingUp },
-      { label: 'Vault & Reports', href: '/team-leader/documents', icon: FileText },
-      { label: 'Timesheets', href: '/timesheets', icon: Clock },
-      { label: 'Helpdesk', href: '/helpdesk', icon: FileText },
-      { label: 'Profile', href: '/profile', icon: User },
+      { label: 'Dashboard', href: '/team-leader/dashboard', icon: LayoutDashboard, module: 'dashboard' },
+      { label: 'Team Assistant', href: '/team-leader/assistant', icon: Sparkles, module: 'assistant' },
+      { label: 'Notifications', href: '/notifications', icon: Megaphone, module: 'notifications' },
+      { label: 'My Team', href: '/team-leader/team', icon: Users, module: 'team' },
+      { label: 'Tasks', href: '/team-leader/tasks', icon: ListTodo, module: 'tasks' },
+      { label: 'Performance', href: '/admin/performance', icon: TrendingUp, module: 'performance' },
+      { label: 'Vault & Reports', href: '/team-leader/documents', icon: FileText, module: 'documents' },
+      { label: 'Timesheets', href: '/timesheets', icon: Clock, module: 'timesheets' },
+      { label: 'Helpdesk', href: '/helpdesk', icon: FileText, module: 'helpdesk' },
+      { label: 'Profile', href: '/profile', icon: User, module: 'profile' },
     ],
     employee: [
-      { label: 'Dashboard', href: '/employee/dashboard', icon: LayoutDashboard },
-      { label: 'AI Assistant', href: '/employee/assistant', icon: Sparkles },
-      { label: 'Notifications', href: '/notifications', icon: Megaphone },
-      { label: 'My Payslips', href: '/employee/payroll', icon: CreditCard },
-      { label: 'My Tasks', href: '/employee/tasks', icon: ListTodo },
-      { label: 'My Performance', href: '/employee/performance', icon: TrendingUp },
-      { label: 'Attendance', href: '/employee/attendance', icon: Clock },
-      { label: 'Leave', href: '/employee/leave', icon: CalendarDays },
-      { label: 'Timesheets', href: '/timesheets', icon: Clock },
-      { label: 'My Assets', href: '/assets', icon: Building2 },
-      { label: 'Helpdesk', href: '/helpdesk', icon: FileText },
-      { label: 'My Vault', href: '/employee/documents', icon: FileText },
-      { label: 'Profile', href: '/profile', icon: User },
+      { label: 'Dashboard', href: '/employee/dashboard', icon: LayoutDashboard, module: 'dashboard' },
+      { label: 'Invoices', href: '/admin/invoices', icon: Receipt, module: 'invoices' },
+      { label: 'AI Assistant', href: '/employee/assistant', icon: Sparkles, module: 'assistant' },
+      { label: 'Notifications', href: '/notifications', icon: Megaphone, module: 'notifications' },
+      { label: 'My Payslips', href: '/employee/payroll', icon: CreditCard, module: 'payroll' },
+      { label: 'My Tasks', href: '/employee/tasks', icon: ListTodo, module: 'tasks' },
+      { label: 'My Performance', href: '/employee/performance', icon: TrendingUp, module: 'performance' },
+      { label: 'Attendance', href: '/employee/attendance', icon: Clock, module: 'attendance' },
+      { label: 'Leave', href: '/employee/leave', icon: CalendarDays, module: 'leave' },
+      { label: 'Timesheets', href: '/timesheets', icon: Clock, module: 'timesheets' },
+      { label: 'My Assets', href: '/assets', icon: Building2, module: 'assets' },
+      { label: 'Helpdesk', href: '/helpdesk', icon: FileText, module: 'helpdesk' },
+      { label: 'My Vault', href: '/employee/documents', icon: FileText, module: 'documents' },
+      { label: 'Profile', href: '/profile', icon: User, module: 'profile' },
     ],
   };
 
@@ -186,7 +186,18 @@ export function Sidebar() {
     };
   }, [pathname, user, token]);
 
-  const currentMenuItems = menuItemsMap[activeNamespace] || menuItemsMap.employee;
+  // Determine which items to display
+  let currentMenuItems = menuItemsMap[activeNamespace] || menuItemsMap.employee;
+
+  // If user has custom role permissions configured, strictly filter the menu items!
+  const isStandard = ['admin', 'hr', 'manager', 'team_leader'].includes(userRole);
+  if (!isStandard && userPermissions && userPermissions.length > 0 && !userPermissions.includes('all')) {
+    // Only show items whose module key is explicitly in userPermissions, or Profile
+    currentMenuItems = currentMenuItems.filter((item) => {
+      if (item.module === 'profile') return true;
+      return userPermissions.includes(item.module);
+    });
+  }
 
   const handleLogout = async () => {
     await logout();
@@ -248,7 +259,7 @@ export function Sidebar() {
       </div>
 
       {/* QUICK NEW LEAVE REQUEST BUTTON FOR EMPLOYEE / MANAGER / HR */}
-      {(isDrawer || !isCollapsed) && activeNamespace !== 'admin' && (
+      {(isDrawer || !isCollapsed) && activeNamespace !== 'admin' && (userPermissions.length === 0 || userPermissions.includes('leave')) && (
         <div className="px-4 pt-4 pb-2">
           <Link
             href={`/${activeNamespace}/leave`}

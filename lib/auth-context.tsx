@@ -31,11 +31,19 @@ function strtolower(str: string): string {
 
 export function canAccessNamespace(
   role: string | undefined,
-  namespace: 'admin' | 'hr' | 'manager' | 'team_leader' | 'employee'
+  namespace: 'admin' | 'hr' | 'manager' | 'team_leader' | 'employee',
+  userPermissions?: string[]
 ): boolean {
   if (!role) return false;
   const r = strtolower(role);
   if (r === 'admin') return true;
+
+  // Custom roles with assigned permissions can access modules in admin or employee
+  if (userPermissions && userPermissions.length > 0) {
+    if (userPermissions.includes('all')) return true;
+    return true; // permit accessing the pages mapped to their permissions
+  }
+
   if (r === 'hr') return namespace === 'hr' || namespace === 'employee';
   if (r === 'manager' || r === 'company_manager') return namespace === 'manager' || namespace === 'team_leader' || namespace === 'employee';
   if (r === 'team_leader' || r === 'tl' || r === 'team_lead') return namespace === 'team_leader' || namespace === 'employee';
@@ -47,8 +55,10 @@ export interface UserProfile {
   name: string;
   email: string;
   employee_code?: string;
-  role: 'admin' | 'hr' | 'manager' | 'team_leader' | 'employee';
+  role: 'admin' | 'hr' | 'manager' | 'team_leader' | 'employee' | string;
+  role_name?: string;
   role_display?: string;
+  role_permissions?: string[];
   department?: string;
   designation?: string;
   organization?: string;
