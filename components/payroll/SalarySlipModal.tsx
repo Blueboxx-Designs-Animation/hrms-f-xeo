@@ -421,24 +421,32 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
                     <span class="field-value" style="font-family: monospace;">${employee.employee_id || `EMP-${id}`}</span>
                   </div>
                   <div class="field-row">
-                    <span class="field-label">PAN Number :</span>
-                    <span class="field-value" style="font-family: monospace;">${employee.pan_number || 'N/A'}</span>
+                    <span class="field-label">No. of Days working :</span>
+                    <span class="field-value" style="font-weight: 800; color: #081e3a;">${employee.working_days ?? 26} Days</span>
                   </div>
                   <div class="field-row">
                     <span class="field-label">Designation :</span>
                     <span class="field-value">${employee.designation || 'Staff'}</span>
                   </div>
                   <div class="field-row">
-                    <span class="field-label">Bank Name :</span>
-                    <span class="field-value">${employee.bank_name || 'HDFC Bank'}</span>
+                    <span class="field-label">Total Leaves taken :</span>
+                    <span class="field-value" style="font-weight: 800; color: #e11d48;">${employee.leaves_taken ?? 0} Days</span>
                   </div>
                   <div class="field-row">
                     <span class="field-label">Department :</span>
                     <span class="field-value">${employee.department || 'General'}</span>
                   </div>
                   <div class="field-row">
+                    <span class="field-label">Bank Name :</span>
+                    <span class="field-value">${employee.bank_name || 'HDFC Bank'}</span>
+                  </div>
+                  <div class="field-row">
                     <span class="field-label">Bank A/C No. :</span>
                     <span class="field-value" style="font-family: monospace;">${employee.bank_account_no || 'N/A'}</span>
+                  </div>
+                  <div class="field-row">
+                    <span class="field-label">PAN Number :</span>
+                    <span class="field-value" style="font-family: monospace;">${employee.pan_number || 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -667,8 +675,8 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               </div>
 
               <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
-                <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">PAN NUMBER :</span>
-                <span className="font-bold text-slate-900 font-mono">{employee.pan_number || 'N/A'}</span>
+                <span className="font-black text-[#081e3a] uppercase text-[10px] w-40">NO. OF DAYS WORKING :</span>
+                <span className="font-extrabold text-[#081e3a]">{employee.working_days ?? 26} Days</span>
               </div>
 
               <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
@@ -677,8 +685,8 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               </div>
 
               <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
-                <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">BANK NAME :</span>
-                <span className="font-bold text-slate-900">{employee.bank_name || 'HDFC Bank'}</span>
+                <span className="font-black text-[#081e3a] uppercase text-[10px] w-40">TOTAL LEAVES TAKEN :</span>
+                <span className="font-extrabold text-rose-600">{employee.leaves_taken ?? 0} Days</span>
               </div>
 
               <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
@@ -687,8 +695,18 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               </div>
 
               <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
+                <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">BANK NAME :</span>
+                <span className="font-bold text-slate-900">{employee.bank_name || 'HDFC Bank'}</span>
+              </div>
+
+              <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
                 <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">BANK A/C NO. :</span>
                 <span className="font-bold text-slate-900 font-mono">{employee.bank_account_no || 'N/A'}</span>
+              </div>
+
+              <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
+                <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">PAN NUMBER :</span>
+                <span className="font-bold text-slate-900 font-mono">{employee.pan_number || 'N/A'}</span>
               </div>
             </div>
           </div>
