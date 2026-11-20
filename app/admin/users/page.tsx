@@ -41,6 +41,7 @@ function format12Hour(timeStr?: string): string {
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [companyDepartments, setCompanyDepartments] = useState<string[]>(DEFAULT_COMPANY_DEPARTMENTS);
+  const [rolesList, setRolesList] = useState<any[]>([]);
   const [managersList, setManagersList] = useState<any[]>([]);
   const [shiftsList, setShiftsList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,6 +97,7 @@ export default function AdminUsersPage() {
     loadUsers();
     loadCompanyDepartments();
     loadShifts();
+    loadRoles();
   }, []);
 
   const loadShifts = async () => {
@@ -164,6 +166,17 @@ export default function AdminUsersPage() {
       }
     } catch (e) {
       // Use default list if error
+    }
+  };
+
+  const loadRoles = async () => {
+    try {
+      const res = await fetchApi('/roles');
+      if (res.roles && Array.isArray(res.roles) && res.roles.length > 0) {
+        setRolesList(res.roles);
+      }
+    } catch (e) {
+      // fallback
     }
   };
 
@@ -479,10 +492,20 @@ export default function AdminUsersPage() {
                 onChange={(e) => setRole(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-bold text-slate-800 bg-white"
               >
-                <option value="employee">Employee</option>
-                <option value="team_leader">Team Leader</option>
-                <option value="manager">Company Manager</option>
-                <option value="hr">HR Specialist</option>
+                {rolesList.length > 0 ? (
+                  rolesList.map((r) => (
+                    <option key={r.id || r.name} value={r.name}>
+                      {r.display_name || r.name}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="employee">Employee</option>
+                    <option value="team_leader">Team Leader</option>
+                    <option value="manager">Company Manager</option>
+                    <option value="hr">HR Specialist</option>
+                  </>
+                )}
               </select>
             </div>
 
@@ -688,11 +711,21 @@ export default function AdminUsersPage() {
                 onChange={(e) => setEditRole(e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-bold text-slate-800 bg-white"
               >
-                <option value="employee">Employee</option>
-                <option value="team_leader">Team Leader</option>
-                <option value="manager">Company Manager</option>
-                <option value="hr">HR Specialist</option>
-                <option value="admin">Master Administrator</option>
+                {rolesList.length > 0 ? (
+                  rolesList.map((r) => (
+                    <option key={r.id || r.name} value={r.name}>
+                      {r.display_name || r.name}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="employee">Employee</option>
+                    <option value="team_leader">Team Leader</option>
+                    <option value="manager">Company Manager</option>
+                    <option value="hr">HR Specialist</option>
+                    <option value="admin">Master Administrator</option>
+                  </>
+                )}
               </select>
             </div>
 
