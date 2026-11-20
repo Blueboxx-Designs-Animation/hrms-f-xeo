@@ -316,9 +316,8 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               font-size: 11.5px;
             }
             .footer-grid {
-              display: grid;
-              grid-template-columns: 1fr 120px 1fr;
-              gap: 16px;
+              display: flex;
+              justify-content: space-between;
               align-items: flex-end;
               padding-top: 14px;
               border-top: 1px solid #e2e8f0;
@@ -437,16 +436,8 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
                     <span class="field-value">${employee.department || 'General'}</span>
                   </div>
                   <div class="field-row">
-                    <span class="field-label">Bank Name :</span>
-                    <span class="field-value">${employee.bank_name || 'HDFC Bank'}</span>
-                  </div>
-                  <div class="field-row">
                     <span class="field-label">Bank A/C No. :</span>
                     <span class="field-value" style="font-family: monospace;">${employee.bank_account_no || 'N/A'}</span>
-                  </div>
-                  <div class="field-row">
-                    <span class="field-label">PAN Number :</span>
-                    <span class="field-value" style="font-family: monospace;">${employee.pan_number || 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -503,15 +494,6 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
                 <div style="font-size: 10.5px; color: #64748b; font-style: italic; line-height: 1.4;">
                   <div>This is a computer generated payslip and does not require any signature.</div>
                   <div style="font-weight: 800; color: #081e3a; font-style: normal; margin-top: 3px;">Thank you for your valuable contribution!</div>
-                </div>
-
-                <div>
-                  <div class="stamp-circle">
-                    <span>BLUEBOXX DA</span>
-                    <span style="font-size: 9px; margin: 1px 0;">★</span>
-                    <span>VADODARA</span>
-                    <span>GUJARAT</span>
-                  </div>
                 </div>
 
                 <div class="signatory-box">
@@ -695,18 +677,8 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               </div>
 
               <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
-                <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">BANK NAME :</span>
-                <span className="font-bold text-slate-900">{employee.bank_name || 'HDFC Bank'}</span>
-              </div>
-
-              <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
                 <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">BANK A/C NO. :</span>
                 <span className="font-bold text-slate-900 font-mono">{employee.bank_account_no || 'N/A'}</span>
-              </div>
-
-              <div className="flex items-center justify-between border-b border-dotted border-slate-300 pb-0.5">
-                <span className="font-black text-[#081e3a] uppercase text-[10px] w-36">PAN NUMBER :</span>
-                <span className="font-bold text-slate-900 font-mono">{employee.pan_number || 'N/A'}</span>
               </div>
             </div>
           </div>
@@ -778,22 +750,13 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
           </div>
 
           {/* FOOTER */}
-          <div className="pt-4 mt-4 border-t border-slate-200 grid grid-cols-12 gap-4 items-end">
-            <div className="col-span-5 text-[10px] text-slate-500 italic space-y-1">
+          <div className="pt-4 mt-4 border-t border-slate-200 flex items-end justify-between">
+            <div className="text-[10px] text-slate-500 italic space-y-1 max-w-sm">
               <p>This is a computer generated payslip and does not require any signature.</p>
               <p className="font-bold text-[#081e3a] not-italic">Thank you for your contribution!</p>
             </div>
 
-            <div className="col-span-3 flex justify-center">
-              <div className="w-18 h-18 rounded-full border-2 border-dashed border-[#10305a] p-1 flex flex-col items-center justify-center text-center text-[7px] font-black text-[#10305a] uppercase leading-tight transform -rotate-6">
-                <span>BLUEBOXX DA</span>
-                <span className="text-[8px] my-0.5">★</span>
-                <span>VADODARA</span>
-                <span>GUJARAT</span>
-              </div>
-            </div>
-
-            <div className="col-span-4 text-center">
+            <div className="text-center">
               <div className="border-t border-slate-700 w-44 ml-auto pt-1">
                 <span className="font-black text-[10px] text-[#081e3a] uppercase block tracking-wider">
                   AUTHORIZED SIGNATORY
