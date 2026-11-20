@@ -82,6 +82,10 @@ export default function AdminPayrollPage() {
   const [confirmPaidItem, setConfirmPaidItem] = useState<any | null>(null);
   const [markingPaid, setMarkingPaid] = useState(false);
 
+  // Confirm Delete State
+  const [deletingPayroll, setDeletingPayroll] = useState<any | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -250,6 +254,21 @@ export default function AdminPayrollPage() {
       setToastMessage(err.message || 'Failed to mark as paid');
     } finally {
       setMarkingPaid(false);
+    }
+  };
+
+  const executeDeletePayroll = async () => {
+    if (!deletingPayroll) return;
+    setIsDeleting(true);
+    try {
+      await fetchApi(`/payroll/${deletingPayroll.id}`, { method: 'DELETE' });
+      setToastMessage('Payroll record deleted successfully!');
+      setDeletingPayroll(null);
+      await loadPayrolls();
+    } catch (err: any) {
+      setToastMessage(err.message || 'Failed to delete payroll record');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -530,6 +549,15 @@ export default function AdminPayrollPage() {
                     Disbursed
                   </span>
                 )}
+
+                {/* DELETE OPTION */}
+                <button
+                  onClick={() => setDeletingPayroll(p)}
+                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all cursor-pointer"
+                  title="Delete Payroll Record"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
               </div>,
             ])}
           />
@@ -949,6 +977,42 @@ export default function AdminPayrollPage() {
                 <span className="text-slate-700">Net Disbursed Pay:</span>
                 <span className="font-mono text-sm font-black">
                   ₹ {Number(confirmPaidItem.net_salary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+            </div>
+          )
+        }
+      />
+
+      {/* CUSTOM CONFIRMATION MODAL FOR DELETE PAYROLL */}
+      <ConfirmModal
+        isOpen={!!deletingPayroll}
+        onClose={() => setDeletingPayroll(null)}
+        onConfirm={executeDeletePayroll}
+        loading={isDeleting}
+        title="Delete Payroll Record"
+        description="Are you sure you want to permanently delete this payroll record? This action cannot be undone."
+        variant="danger"
+        confirmText="Yes, Delete Record"
+        details={
+          deletingPayroll && (
+            <div className="space-y-2 text-slate-700 font-medium">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 font-bold">Employee:</span>
+                <span className="font-extrabold text-slate-900">
+                  {deletingPayroll.employee?.name} ({deletingPayroll.employee?.employee_code || `EMP-${deletingPayroll.employee_id}`})
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 font-bold">Pay Period:</span>
+                <span className="font-extrabold text-slate-900">
+                  {deletingPayroll.pay_period_month} {deletingPayroll.pay_period_year}
+                </span>
+              </div>
+              <div className="flex justify-between items-center border-t border-slate-200 pt-2 font-bold text-rose-800">
+                <span className="text-slate-700">Net Salary:</span>
+                <span className="font-mono text-sm font-black">
+                  ₹ {Number(deletingPayroll.net_salary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
