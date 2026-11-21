@@ -47,11 +47,18 @@ interface TaskManagerProps {
 export function TaskManager({ portalScope = 'employee' }: TaskManagerProps) {
   const { user } = useAuth();
   const userRole = (user?.role || '').toLowerCase();
-  const isEmployeeMode = portalScope === 'employee' || userRole === 'employee';
+  const userRoleName = (user?.role_name || '').toLowerCase();
+  const userPermissions: string[] = Array.isArray(user?.role_permissions) ? user.role_permissions : [];
+  const hasTaskPermission = userPermissions.includes('all') || userPermissions.includes('tasks');
+
   const isHRMode = portalScope === 'hr' || userRole === 'hr';
   const isManagerMode = portalScope === 'manager' || userRole === 'manager';
   const isTeamLeaderMode = portalScope === 'team_leader' || userRole === 'team_leader';
   const isAdminMode = portalScope === 'admin' || userRole === 'admin';
+
+  // Any role granted 'tasks' module permission can create/assign tasks (including to oneself)
+  const canAssignTasks = isAdminMode || isHRMode || isManagerMode || isTeamLeaderMode || hasTaskPermission;
+  const isEmployeeMode = !canAssignTasks && (portalScope === 'employee' || userRole === 'employee');
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [metrics, setMetrics] = useState<TaskMetrics>({
