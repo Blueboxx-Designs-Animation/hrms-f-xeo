@@ -26,6 +26,7 @@ const DEFAULT_PERMISSIONS: PermissionItem[] = [
   { key: 'recruitment.ats', name: 'Recruitment & Job Openings Pipeline', module: 'recruitment', roles: ['hr', 'admin'] },
   { key: 'leave.approve', name: 'Approve & Reject Leave Requests', module: 'leave', roles: ['hr', 'manager', 'admin'] },
   { key: 'team.view', name: 'View Direct Team Roster & Reports', module: 'team', roles: ['manager', 'team_leader', 'admin'] },
+  { key: 'tasks.assign', name: 'Assign Tasks to Anyone & Oneself', module: 'tasks_assign', roles: ['admin', 'hr', 'manager', 'team_leader'] },
   { key: 'tasks.manage', name: 'Assign & Review Tasks & Submissions', module: 'tasks', roles: ['admin', 'hr', 'manager', 'team_leader'] },
   { key: 'attendance.track', name: 'Attendance Check-In & Tracking', module: 'attendance', roles: ['admin', 'hr', 'manager', 'team_leader', 'employee'] },
   { key: 'leave.apply', name: 'Submit Leave Requests & View Quotas', module: 'leave', roles: ['employee', 'manager', 'hr', 'team_leader', 'admin'] },

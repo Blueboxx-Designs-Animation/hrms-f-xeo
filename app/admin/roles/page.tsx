@@ -13,7 +13,8 @@ import { Plus, Trash2, Shield, Edit } from '@/components/ui/Icon';
 const AVAILABLE_MODULES = [
   { key: 'dashboard', label: 'Dashboard Overview', desc: 'Main dashboard analytics & overview metrics' },
   { key: 'invoices', label: 'Invoices & Billing', desc: 'Create, edit, view client invoices and payments' },
-  { key: 'tasks', label: 'Task Management', desc: 'Task assignments, progress, and submissions' },
+  { key: 'tasks', label: 'Task Management (Self & Others)', desc: 'Assign tasks to anyone/oneself, review & track tasks' },
+  { key: 'tasks_assign', label: 'Task Assignment Authorization', desc: 'Can explicitly assign new tasks to team members or oneself' },
   { key: 'attendance', label: 'Attendance Tracking', desc: 'Daily check-in / check-out and attendance logs' },
   { key: 'leave', label: 'Leave Requests', desc: 'Apply, view, and track leave balances' },
   { key: 'payroll', label: 'Payroll & Salary Slips', desc: 'Access salary slips and compensation reports' },
@@ -100,9 +101,19 @@ export default function AdminRolesPage() {
 
   const toggleModule = (moduleKey: string) => {
     if (selectedModules.includes(moduleKey)) {
-      setSelectedModules(selectedModules.filter((m) => m !== moduleKey));
+      if (moduleKey === 'tasks') {
+        setSelectedModules(selectedModules.filter((m) => m !== 'tasks' && m !== 'tasks_assign'));
+      } else {
+        setSelectedModules(selectedModules.filter((m) => m !== moduleKey));
+      }
     } else {
-      setSelectedModules([...selectedModules, moduleKey]);
+      if (moduleKey === 'tasks_assign') {
+        setSelectedModules([...new Set([...selectedModules, 'tasks', 'tasks_assign'])]);
+      } else if (moduleKey === 'tasks') {
+        setSelectedModules([...new Set([...selectedModules, 'tasks', 'tasks_assign'])]);
+      } else {
+        setSelectedModules([...selectedModules, moduleKey]);
+      }
     }
   };
 
