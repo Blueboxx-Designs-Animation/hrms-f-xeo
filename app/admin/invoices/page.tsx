@@ -261,7 +261,7 @@ export default function AdminInvoicesPage() {
             </div>
           </div>
           <div className="text-2xl font-black text-indigo-900 mt-2">
-            {formatCurrency(summary.total_amount)}
+            {formatCurrency(summary.total_amount, 'EUR')}
           </div>
           <div className="text-[11px] font-semibold text-indigo-600/80 mt-1">
             Across all active enterprise contracts
@@ -277,7 +277,7 @@ export default function AdminInvoicesPage() {
             </div>
           </div>
           <div className="text-2xl font-black text-emerald-700 mt-2">
-            {formatCurrency(summary.paid_amount)}
+            {formatCurrency(summary.paid_amount, 'EUR')}
           </div>
           <div className="text-[11px] font-semibold text-emerald-600/90 mt-1">
             Successfully cleared payments
@@ -293,11 +293,11 @@ export default function AdminInvoicesPage() {
             </div>
           </div>
           <div className="text-2xl font-black text-rose-700 mt-2">
-            {formatCurrency(summary.outstanding_amount)}
+            {formatCurrency(summary.outstanding_amount, 'EUR')}
           </div>
           <div className="text-[11px] font-semibold text-rose-600 mt-1 flex items-center gap-1">
             {summary.overdue_amount > 0 && (
-              <span>⚠️ {formatCurrency(summary.overdue_amount)} overdue</span>
+              <span>⚠️ {formatCurrency(summary.overdue_amount, 'EUR')} overdue</span>
             )}
             {summary.overdue_amount === 0 && (
               <span className="text-slate-400">All within payment terms</span>
@@ -463,15 +463,15 @@ export default function AdminInvoicesPage() {
                 </span>,
 
                 <span key="tot-amt" className="text-xs font-bold text-slate-900 font-mono">
-                  {formatCurrency(inv.total_amount, inv.currency)}
+                  {formatCurrency(inv.total_amount, 'EUR')}
                 </span>,
 
                 <span key="paid-amt" className="text-xs font-bold text-emerald-700 font-mono">
-                  {formatCurrency(inv.paid_amount, inv.currency)}
+                  {formatCurrency(inv.paid_amount, 'EUR')}
                 </span>,
 
                 <span key="bal-amt" className={`text-xs font-bold font-mono ${inv.balance_due > 0 ? 'text-rose-700' : 'text-slate-400'}`}>
-                  {formatCurrency(inv.balance_due, inv.currency)}
+                  {formatCurrency(inv.balance_due, 'EUR')}
                 </span>,
 
                 <Badge key="pay-status" variant={paymentVariant as any}>
@@ -554,14 +554,14 @@ export default function AdminInvoicesPage() {
             <div className="text-right">
               <span className="text-slate-500 font-bold block">Balance Due</span>
               <span className="font-black text-rose-700 text-base font-mono">
-                {formatCurrency(selectedInvoice?.balance_due, selectedInvoice?.currency)}
+                {formatCurrency(selectedInvoice?.balance_due, 'EUR')}
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Payment Amount (₹) *</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Payment Amount (€) *</label>
               <input
                 type="number"
                 step="0.01"
