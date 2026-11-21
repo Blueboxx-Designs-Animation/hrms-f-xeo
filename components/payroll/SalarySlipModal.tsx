@@ -448,18 +448,18 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
                     </tr>
                     <tr>
                       <th class="tbl-sub-head" style="width: 33%; border-right: 1px solid #cbd5e1;">Particulars</th>
-                      <th class="tbl-sub-head" style="text-align: right; width: 17%; border-right: 2px solid #081e3a;">Amount (€)</th>
+                      <th class="tbl-sub-head" style="text-align: right; width: 17%; border-right: 2px solid #081e3a;">Amount (₹)</th>
                       <th class="tbl-sub-head" style="width: 33%; border-right: 1px solid #cbd5e1;">Particulars</th>
-                      <th class="tbl-sub-head" style="text-align: right; width: 17%;">Amount (€)</th>
+                      <th class="tbl-sub-head" style="text-align: right; width: 17%;">Amount (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
                     ${earningsRowsHtml}
                     <tr class="tbl-total-row">
                       <td style="padding: 9px 12px; text-transform: uppercase; border-right: 1px solid #cbd5e1;">TOTAL EARNINGS (A)</td>
-                      <td style="padding: 9px 12px; font-family: monospace; text-align: right; border-right: 2px solid #081e3a;">€ ${Number(total_earnings).toFixed(2)}</td>
+                      <td style="padding: 9px 12px; font-family: monospace; text-align: right; border-right: 2px solid #081e3a;">₹ ${Number(total_earnings).toFixed(2)}</td>
                       <td style="padding: 9px 12px; text-transform: uppercase; border-right: 1px solid #cbd5e1;">TOTAL DEDUCTIONS (B)</td>
-                      <td style="padding: 9px 12px; font-family: monospace; text-align: right;">€ ${Number(total_deductions).toFixed(2)}</td>
+                      <td style="padding: 9px 12px; font-family: monospace; text-align: right;">₹ ${Number(total_deductions).toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -468,14 +468,14 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
               <!-- NET SALARY -->
               <div class="net-box">
                 <div class="net-badge">
-                  <div class="net-badge-icon">€</div>
+                  <div class="net-badge-icon">₹</div>
                   <div>
                     <div style="font-size: 13px; font-weight: 900; letter-spacing: 0.5px;">NET SALARY</div>
                     <div style="font-size: 10px; color: #cbd5e1; font-weight: 700;">(A − B)</div>
                   </div>
                 </div>
                 <div class="net-amount">
-                  € ${Number(net_salary).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  ₹ ${Number(net_salary).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
                 <div class="net-words">
                   <div style="font-size: 9px; font-weight: 900; text-transform: uppercase; color: #64748b; letter-spacing: 1px;">AMOUNT IN WORDS</div>
@@ -685,9 +685,9 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
 
             <div className="grid grid-cols-12 text-[#081e3a] font-extrabold text-[10px] uppercase border-b border-slate-300 divide-x divide-slate-300 bg-[#e8f1fb]">
               <div className="col-span-4 p-1.5 pl-3">PARTICULARS</div>
-              <div className="col-span-2 p-1.5 text-right pr-3">AMOUNT (€)</div>
+              <div className="col-span-2 p-1.5 text-right pr-3">AMOUNT (₹)</div>
               <div className="col-span-4 p-1.5 pl-3">PARTICULARS</div>
-              <div className="col-span-2 p-1.5 text-right pr-3">AMOUNT (€)</div>
+              <div className="col-span-2 p-1.5 text-right pr-3">AMOUNT (₹)</div>
             </div>
 
             <div className="divide-y divide-slate-200">
@@ -710,9 +710,9 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
 
             <div className="grid grid-cols-12 text-[#081e3a] font-black text-[11px] border-t-2 border-[#081e3a] divide-x-2 divide-[#081e3a] bg-[#e8f1fb]">
               <div className="col-span-4 p-1.5 pl-3 uppercase">TOTAL EARNINGS (A)</div>
-              <div className="col-span-2 p-1.5 text-right pr-3 font-mono">€ {Number(total_earnings).toFixed(2)}</div>
+              <div className="col-span-2 p-1.5 text-right pr-3 font-mono">₹ {Number(total_earnings).toFixed(2)}</div>
               <div className="col-span-4 p-1.5 pl-3 uppercase">TOTAL DEDUCTIONS (B)</div>
-              <div className="col-span-2 p-1.5 text-right pr-3 font-mono">€ {Number(total_deductions).toFixed(2)}</div>
+              <div className="col-span-2 p-1.5 text-right pr-3 font-mono">₹ {Number(total_deductions).toFixed(2)}</div>
             </div>
           </div>
 
@@ -720,7 +720,7 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
           <div className="my-3 border-2 border-[#081e3a] rounded-xl overflow-hidden flex items-center bg-white shadow-2xs">
             <div className="bg-[#081e3a] text-white p-3 flex items-center gap-3 w-52 shrink-0">
               <div className="w-8 h-8 rounded-full bg-white text-[#081e3a] flex items-center justify-center font-black text-base shrink-0">
-                €
+                ₹
               </div>
               <div className="leading-tight">
                 <span className="font-black text-xs block uppercase">NET SALARY</span>
@@ -730,7 +730,7 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
 
             <div className="px-5 py-2 border-r border-slate-200 shrink-0">
               <span className="font-black text-2xl text-[#081e3a] tracking-tight">
-                € {Number(net_salary).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ₹ {Number(net_salary).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
 
@@ -774,4 +774,5 @@ export function SalarySlipModal({ isOpen, onClose, slipData }: SalarySlipModalPr
     </Modal>
   );
 }
+
 
