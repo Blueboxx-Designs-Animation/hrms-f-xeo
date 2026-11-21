@@ -125,6 +125,7 @@ export default function AdminRolesPage() {
         // Update existing role
         const payload: any = {
           display_name: trimmedDisplay,
+          name: systemKey.trim().toLowerCase().replace(/\s+/g, '_') || undefined,
           description: description.trim() || undefined,
           permissions: selectedModules,
         };
@@ -300,18 +301,20 @@ export default function AdminRolesPage() {
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">
-              System Key (Code)
+              System Key (Code) {isStandardRole(systemKey) && <span className="text-slate-400 font-normal">(System Core Protected)</span>}
             </label>
             <input
               type="text"
-              disabled={!!editingRoleId}
+              disabled={isStandardRole(systemKey)}
               value={systemKey}
               onChange={(e) => setSystemKey(e.target.value.toLowerCase().replace(/\s+/g, '_'))}
               placeholder="e.g. client, project_manager"
-              className={`w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0f365e] ${editingRoleId ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white'}`}
+              className={`w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0f365e] ${isStandardRole(systemKey) ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white'}`}
             />
             <p className="text-[10px] text-slate-400 mt-1">
-              Unique identifier used internally for permissions. Cannot be altered after creation.
+              {isStandardRole(systemKey) 
+                ? 'Core system roles cannot change their internal system key.' 
+                : 'Unique identifier used internally for permissions. You can modify this anytime.'}
             </p>
           </div>
 
