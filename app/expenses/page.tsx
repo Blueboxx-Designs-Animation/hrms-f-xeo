@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { PortalLayout } from '@/components/layout/PortalLayout';
@@ -187,7 +187,7 @@ export default function ExpensesPage() {
             <span>Approved Total</span>
             <DollarSign className="w-4 h-4 text-indigo-500" />
           </div>
-          <p className="text-2xl font-black text-indigo-700">₹{totalAmount.toLocaleString()}</p>
+          <p className="text-2xl font-black text-indigo-700">€{totalAmount.toLocaleString()}</p>
         </div>
       </div>
 
@@ -237,7 +237,7 @@ export default function ExpensesPage() {
           <div className="p-8 text-center text-xs text-slate-500 font-medium">No expense claims match your selection.</div>
         ) : (
           <TablePrimitive
-            headers={['Employee', 'Category', 'Claim Date', 'Amount (₹)', 'Description', 'Status', 'Actions']}
+            headers={['Employee', 'Category', 'Claim Date', 'Amount (€)', 'Description', 'Status', 'Actions']}
             rows={filteredClaims.map((c) => [
               <div key="emp" className="flex flex-col">
                 <span className="font-extrabold text-slate-900 text-xs">{c.user?.name || 'Self'}</span>
@@ -247,7 +247,7 @@ export default function ExpensesPage() {
                 {c.category}
               </span>,
               <span key="date" className="font-mono text-xs text-slate-500">{c.claim_date}</span>,
-              <span key="amt" className="font-mono text-xs font-black text-slate-900">₹{c.amount}</span>,
+              <span key="amt" className="font-mono text-xs font-black text-slate-900">€{c.amount}</span>,
               <span key="desc" className="text-xs text-slate-600 truncate max-w-xs">{c.description}</span>,
               <Badge
                 key="status"
@@ -328,7 +328,7 @@ export default function ExpensesPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Claim Amount (₹)</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Claim Amount (€)</label>
               <input
                 type="number"
                 required
@@ -426,3 +426,4 @@ export default function ExpensesPage() {
     </PortalLayout>
   );
 }
+

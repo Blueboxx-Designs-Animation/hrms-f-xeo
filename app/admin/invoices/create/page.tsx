@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -375,7 +375,7 @@ export default function CreateInvoicePage() {
                 </div>
               </div>
               <span className="text-xs font-mono font-bold px-2.5 py-1 bg-slate-100 text-slate-800 rounded-lg">
-                {currency} ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '₹'})
+                {currency} ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '€'})
               </span>
             </div>
 
@@ -434,7 +434,7 @@ export default function CreateInvoicePage() {
                   className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white font-bold"
                 >
                   <option value="EUR">EUR (€ - Euro)</option>
-                  <option value="INR">INR (₹ - Indian Rupee)</option>
+                  <option value="INR">INR (€ - Indian Rupee)</option>
                   <option value="USD">USD ($ - US Dollar)</option>
                   <option value="GBP">GBP (£ - British Pound)</option>
                 </select>
@@ -686,7 +686,7 @@ export default function CreateInvoicePage() {
                       </div>
 
                       <div className="md:col-span-3">
-                        <label className="block text-[11px] font-bold text-slate-700 mb-1">Unit Rate ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '₹'}) *</label>
+                        <label className="block text-[11px] font-bold text-slate-700 mb-1">Unit Rate ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '€'}) *</label>
                         <input
                           type="number"
                           step="0.01"
@@ -820,7 +820,7 @@ export default function CreateInvoicePage() {
                         discountType === 'fixed' ? 'bg-[#0f365e] text-white' : 'bg-slate-100 text-slate-600'
                       }`}
                     >
-                      Flat ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '₹'})
+                      Flat ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '€'})
                     </button>
                     <button
                       type="button"
@@ -884,7 +884,7 @@ export default function CreateInvoicePage() {
 
               {/* Paid Amount Input */}
               <div className="pt-1">
-                <label className="block text-xs font-bold text-slate-700 mb-1">Paid / Advance Amount ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '₹'})</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Paid / Advance Amount ({currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '€'})</label>
                 <input
                   type="number"
                   step="0.01"
@@ -1184,3 +1184,4 @@ export default function CreateInvoicePage() {
     </PortalLayout>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
 import { PortalLayout } from '@/components/layout/PortalLayout';
@@ -416,7 +416,7 @@ export default function AdminOrganizationPage() {
                     onChange={(e) => setCurrencyInput(e.target.value)}
                     className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-semibold focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
                   >
-                    <option value="INR">INR (₹ - Indian Rupee)</option>
+                    <option value="INR">INR (€ - Indian Rupee)</option>
                     <option value="USD">USD ($ - US Dollar)</option>
                     <option value="EUR">EUR (€ - Euro)</option>
                     <option value="GBP">GBP (£ - British Pound)</option>
@@ -479,3 +479,4 @@ export default function AdminOrganizationPage() {
     </PortalLayout>
   );
 }
+

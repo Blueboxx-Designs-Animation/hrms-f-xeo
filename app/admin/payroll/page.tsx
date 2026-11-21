@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { PortalLayout } from '@/components/layout/PortalLayout';
@@ -321,11 +321,11 @@ export default function AdminPayrollPage() {
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500 uppercase">Total Net Payroll</span>
             <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold">
-              ₹
+              €
             </div>
           </div>
           <p className="text-2xl font-black text-slate-900">
-            ₹ {Number(metrics.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+            € {Number(metrics.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </p>
           <p className="text-[10px] text-slate-400 mt-1">For {selectedMonth} {selectedYear}</p>
         </div>
@@ -500,13 +500,13 @@ export default function AdminPayrollPage() {
                 {p.pay_period_month} {p.pay_period_year}
               </span>,
               <span key="gross" className="font-mono text-xs text-slate-700">
-                ₹ {Number(p.total_earnings || 0).toFixed(2)}
+                € {Number(p.total_earnings || 0).toFixed(2)}
               </span>,
               <span key="ded" className="font-mono text-xs text-rose-600">
-                ₹ {Number(p.total_deductions || 0).toFixed(2)}
+                € {Number(p.total_deductions || 0).toFixed(2)}
               </span>,
               <span key="net" className="font-mono font-black text-xs text-[#081e3a]">
-                ₹ {Number(p.net_salary || 0).toFixed(2)}
+                € {Number(p.net_salary || 0).toFixed(2)}
               </span>,
               <span key="mode" className="text-[11px] font-semibold text-slate-600 capitalize">
                 {p.payment_mode === 'gpay' ? 'G-Pay' : (p.payment_mode ? p.payment_mode.replace('_', ' ') : 'Bank Transfer')}
@@ -692,7 +692,7 @@ export default function AdminPayrollPage() {
               >
                 {employeesList.map((emp) => (
                   <option key={emp.id} value={emp.id}>
-                    {emp.name} ({emp.employee_code || `EMP-${emp.id}`} • {emp.department || 'General'} — Base CTC: ₹{Number(emp.base_salary || 50000).toLocaleString('en-IN')})
+                    {emp.name} ({emp.employee_code || `EMP-${emp.id}`} • {emp.department || 'General'} — Base CTC: €{Number(emp.base_salary || 50000).toLocaleString('en-IN')})
                   </option>
                 ))}
               </select>
@@ -788,7 +788,7 @@ export default function AdminPayrollPage() {
                       placeholder="e.g. Basic Salary"
                     />
                     <div className="relative w-32 shrink-0">
-                      <span className="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">₹</span>
+                      <span className="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">€</span>
                       <input
                         type="number"
                         step="0.01"
@@ -816,7 +816,7 @@ export default function AdminPayrollPage() {
 
               <div className="bg-emerald-50/70 px-4 py-2.5 border-t border-emerald-200 flex items-center justify-between font-black text-xs text-emerald-950">
                 <span>TOTAL EARNINGS (A):</span>
-                <span className="font-mono text-sm">₹ {liveTotalEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="font-mono text-sm">€ {liveTotalEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
               </div>
             </div>
 
@@ -851,7 +851,7 @@ export default function AdminPayrollPage() {
                       placeholder="e.g. Provident Fund"
                     />
                     <div className="relative w-32 shrink-0">
-                      <span className="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">₹</span>
+                      <span className="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">€</span>
                       <input
                         type="number"
                         step="0.01"
@@ -879,7 +879,7 @@ export default function AdminPayrollPage() {
 
               <div className="bg-rose-50/70 px-4 py-2.5 border-t border-rose-200 flex items-center justify-between font-black text-xs text-rose-950">
                 <span>TOTAL DEDUCTIONS (B):</span>
-                <span className="font-mono text-sm text-rose-700">₹ {liveTotalDeductions.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="font-mono text-sm text-rose-700">€ {liveTotalDeductions.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
               </div>
             </div>
           </div>
@@ -888,14 +888,14 @@ export default function AdminPayrollPage() {
           <div className="p-4 bg-gradient-to-r from-[#081e3a] to-[#163660] text-white rounded-xl flex items-center justify-between shadow-sm border border-slate-700">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-xs">
-                ₹
+                €
               </div>
               <div>
                 <span className="text-[10px] text-slate-300 font-bold uppercase tracking-wider block">
                   Calculated Net Disbursed Salary (A − B)
                 </span>
                 <p className="text-2xl font-black font-mono tracking-tight text-white mt-0.5">
-                  ₹ {liveNetSalary.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  € {liveNetSalary.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
             </div>
@@ -976,7 +976,7 @@ export default function AdminPayrollPage() {
               <div className="flex justify-between items-center border-t border-slate-200 pt-2 font-bold text-emerald-800">
                 <span className="text-slate-700">Net Disbursed Pay:</span>
                 <span className="font-mono text-sm font-black">
-                  ₹ {Number(confirmPaidItem.net_salary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                  € {Number(confirmPaidItem.net_salary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
@@ -1012,7 +1012,7 @@ export default function AdminPayrollPage() {
               <div className="flex justify-between items-center border-t border-slate-200 pt-2 font-bold text-rose-800">
                 <span className="text-slate-700">Net Salary:</span>
                 <span className="font-mono text-sm font-black">
-                  ₹ {Number(deletingPayroll.net_salary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                  € {Number(deletingPayroll.net_salary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
@@ -1024,3 +1024,4 @@ export default function AdminPayrollPage() {
     </PortalLayout>
   );
 }
+

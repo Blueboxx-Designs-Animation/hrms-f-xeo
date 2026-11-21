@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { PortalLayout } from '@/components/layout/PortalLayout';
@@ -80,13 +80,13 @@ export default function LoansPage() {
           <div className="p-8 text-center text-xs text-slate-500 font-medium">No company loans or salary advance requests.</div>
         ) : (
           <TablePrimitive
-            headers={['Employee', 'Loan Amount (₹)', 'Tenure', 'Monthly EMI (₹)', 'Outstanding (₹)', 'Status']}
+            headers={['Employee', 'Loan Amount (€)', 'Tenure', 'Monthly EMI (€)', 'Outstanding (€)', 'Status']}
             rows={loans.map((l) => [
               <span key="emp" className="font-extrabold text-slate-900 text-xs">{l.user?.name || 'Self'}</span>,
-              <span key="amt" className="font-mono text-xs font-black text-slate-900">₹{l.amount}</span>,
+              <span key="amt" className="font-mono text-xs font-black text-slate-900">€{l.amount}</span>,
               <span key="ten" className="font-mono text-xs text-slate-600 font-bold">{l.tenure_months} Months</span>,
-              <span key="emi" className="font-mono text-xs text-blue-700 font-bold">₹{l.monthly_installment} / mo</span>,
-              <span key="bal" className="font-mono text-xs text-amber-700 font-bold">₹{l.outstanding_balance}</span>,
+              <span key="emi" className="font-mono text-xs text-blue-700 font-bold">€{l.monthly_installment} / mo</span>,
+              <span key="bal" className="font-mono text-xs text-amber-700 font-bold">€{l.outstanding_balance}</span>,
               <Badge key="status" variant={l.status === 'approved' ? 'green' : 'amber'}>
                 {l.status.toUpperCase()}
               </Badge>,
@@ -100,7 +100,7 @@ export default function LoansPage() {
         <form onSubmit={handleCreateLoan} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Requested Loan Amount (₹)</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Requested Loan Amount (€)</label>
               <input
                 type="number"
                 required
@@ -127,7 +127,7 @@ export default function LoansPage() {
           </div>
 
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 font-medium">
-            Estimated Monthly Deduction: <span className="font-bold font-mono">₹{Math.round(parseFloat(amount || '0') / parseInt(tenure || '1'))} / month</span>
+            Estimated Monthly Deduction: <span className="font-bold font-mono">€{Math.round(parseFloat(amount || '0') / parseInt(tenure || '1'))} / month</span>
           </div>
 
           <div>
@@ -164,3 +164,4 @@ export default function LoansPage() {
     </PortalLayout>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { PortalLayout } from '@/components/layout/PortalLayout';
@@ -430,7 +430,7 @@ export default function HRRecruitmentPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Offered Monthly Base Salary (₹)</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Offered Monthly Base Salary (€)</label>
               <input
                 type="number"
                 required
@@ -477,3 +477,4 @@ export default function HRRecruitmentPage() {
     </PortalLayout>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect, useState } from 'react';
 import { PortalLayout } from '@/components/layout/PortalLayout';
@@ -84,13 +84,13 @@ export default function EmployeePayslipsPage() {
                 <p className="text-[10px] text-slate-400">Paid on: {p.pay_date || 'N/A'}</p>
               </div>,
               <span key="gross" className="font-mono text-xs text-slate-700">
-                ₹ {Number(p.total_earnings || 0).toFixed(2)}
+                € {Number(p.total_earnings || 0).toFixed(2)}
               </span>,
               <span key="ded" className="font-mono text-xs text-rose-600">
-                ₹ {Number(p.total_deductions || 0).toFixed(2)}
+                € {Number(p.total_deductions || 0).toFixed(2)}
               </span>,
               <span key="net" className="font-mono font-black text-xs text-[#081e3a]">
-                ₹ {Number(p.net_salary || 0).toFixed(2)}
+                € {Number(p.net_salary || 0).toFixed(2)}
               </span>,
               <span key="mode" className="text-[11px] font-semibold text-slate-600 capitalize">
                 {p.payment_mode === 'gpay' ? 'G-Pay' : (p.payment_mode ? p.payment_mode.replace('_', ' ') : 'Bank Transfer')}
@@ -123,3 +123,4 @@ export default function EmployeePayslipsPage() {
     </PortalLayout>
   );
 }
+
